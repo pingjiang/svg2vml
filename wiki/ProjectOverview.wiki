@@ -2,12 +2,11 @@
 
 ===Welcome to the svg2vml project site! ===
 
-SVG2VML is a lightweight javascript library that allows us to include SVG and VML elements in web pages with a common interface. This project is a work in progress, and suggestions and contributions are welcome.
+SVG2VML is a lightweight JavaScript library that makes it easy to include vector graphics in web pages by providing a common SVG-style programming interface to VML and SVG. This project is a work in progress, and suggestions and contributions are welcome.
 
 You can view the ProjectRoadmap to see upcoming changes we have planned.
 
 You can download the library in the downloads section.
-
 
 
 
