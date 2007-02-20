@@ -8,5 +8,5 @@ You can view the ProjectRoadmap to see upcoming changes we have planned.
 
 You can download the library in the downloads section.
 
-
+If you have comments, suggestions, or questions you can email me at lorien.henrywilkins@gmail.com.
 
