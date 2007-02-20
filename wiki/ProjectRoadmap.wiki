@@ -1,12 +1,9 @@
 #summary The SVG2VML Project Roadmap
 
-= Introduction =
+= The SVG2VML Project Roadmap =
 
-Project TODO.
-
-= Details =
-
-*0.0.1: Complete basic functionality*
+== 0.0.1: Complete basic functionality ==
   * Implement gradients for circles and ellipses
   * Make gradient uniform for SVG and VML
   * Implement polyline
+
