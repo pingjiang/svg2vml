@@ -1,4 +1,5 @@
 #summary The SVG2VML Project Roadmap
+#labels Featured
 
 == 0.0.1: Complete basic functionality ==
   * Implement gradients for circles and ellipses
