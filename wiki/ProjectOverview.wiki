@@ -7,6 +7,6 @@ SVG2VML is a lightweight JavaScript library that makes it easy to include vector
 
 You can view the ProjectRoadmap to see upcoming changes we have planned.
 
-You can download the library in the downloads section, and see examples of use here: http://jsviz.org/svg2vml/svg2vmlExample1.html.
+See the SampleCode page for examples of use.
 
 If you have comments, suggestions, or questions you can email me at lorien.henrywilkins@gmail.com.
