@@ -1,7 +1,9 @@
 #summary The SVG2VML Project Roadmap
 #labels Featured
 
-== 0.0.1: Complete basic functionality ==
-  * Implement gradients for circles and ellipses
+== 1.1: Complete basic functionality ==
   * Make gradient uniform for SVG and VML
+
+== 1.2: Complete basic functionality ==
   * Implement polyline
+  * Implement gradients for circles and ellipses
