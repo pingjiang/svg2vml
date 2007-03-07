@@ -1,6 +1,5 @@
 #summary Release Notes
 #labels Featured
 
-Version 1.1
-
-* All supported functionality can now be called using the SVG API rather than the SVG2VML API. The library maps SVG syntax to VML when the browser is Internet Explorer. When the browser supports SVG, the SVG2VML implementation is not used.
+== Version 1.1 ==
+   * All supported functionality can now be called using the SVG API rather than the SVG2VML API. The library maps SVG syntax to VML when the browser is Internet Explorer. When the browser supports SVG, the SVG2VML implementation is not used.
