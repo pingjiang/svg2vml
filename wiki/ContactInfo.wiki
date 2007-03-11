@@ -1,0 +1,7 @@
+#summary How to contact us
+#labels Featured
+
+If you have questions or want to contribute to the project you can contact Lorien or Kyle.
+
+Lorien Henry-Wilkins: lorien.henrywilkins@gmail.com
+Kyle Scholz: kyle.scholz@gmail.com
