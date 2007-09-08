@@ -15,150 +15,145 @@
  * Copyright: 2006-2007
  */
 
-var VectorModel = function() {
-	this.init();
+// TODO:(kyle) Why aren't the create functions part of the svg2vml class?
+var svg2vml = function() {
+	svg2vml.prototype.svg_capable = document.implementation.hasFeature("org.w3c.dom.svg", '1.1');
+	svg2vml.prototype.vml_capable = (document.all && !(navigator.userAgent.indexOf("Opera")>=0)) ? true : false;
+
+	if ( this.vml_capable ) {
+		document.namespaces.add("v","urn:schemas-microsoft-com:vml");
+		document.createStyleSheet().addRule("v\\:*", "behavior:url(#default#VML); position:absolute" );
+
+		var me = this;
+		document.createElementNS = function( ns, element ) {
+			return me.createElement( element );
+		}
+	}
 };
 
-var linearGradients = new Object();
+svg2vml.prototype.svg_capable = false;
+svg2vml.prototype.vml_capable = false;
 
-VectorModel.prototype = {
-	init: function() {
-		this.svg_capable = document.implementation.hasFeature("org.w3c.dom.svg", '1.1');
-		this.vml_capable = (document.all && !(navigator.userAgent.indexOf("Opera")>=0)) ? true : false;
+svg2vml.prototype.createElement = function( element ) {
+	if ( this.svg_capable ) {
+		var svgElement = document.createElementNS("http://www.w3.org/2000/svg", element);
 		
-		if ( this.vml_capable ) {
-			document.namespaces.add("v","urn:schemas-microsoft-com:vml");
-//			document.createStyleSheet().addRule("v\\:*", "behavior:url(#default#VML)");
-			document.createStyleSheet().addRule("v\\:*", "behavior:url(#default#VML); position:absolute" );
+		if ( element == "rect" ) {
+			svgElement.applyGradient = function( gradient ) {
+				if ( gradient.type == "LinearGradient" ) {
+					var group = svgElement.parentNode;
 
-			var me = this;
-			document.createElementNS = function( ns, element ) {
-				return me.createElement( element );
-			}
-		}
-	},
-	
-	createElement: function( element ) {
-		
-		if ( this.svg_capable ) {
-			var svgElement = document.createElementNS("http://www.w3.org/2000/svg", element);
-			
-			if ( element == "rect" ) {
-				svgElement.applyGradient = function( gradient ) {
-					if ( gradient.type == "LinearGradient" ) {
-						var group = svgElement.parentNode;
+					if ( !document.getElementById(gradient.id ) ) {
+						var linearGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+						linearGradient.id = gradient.id;
+						
+						// the gradient angle is orthoganal to our base angle
+						var angle = (gradient.angle + 90) % 360;
+						if ( angle<0 ) { angle = angle%360 + 360; }
+						var originAxis = "X";
 
-						if ( !document.getElementById(gradient.id ) ) {
-							var linearGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
-							linearGradient.id = gradient.id;
-							
-							// the gradient angle is orthoganal to our base angle
-							var angle = (gradient.angle + 90) % 360;
-							if ( angle<0 ) { angle = angle%360 + 360; }
-							var originAxis = "X";
+						var x1Pcnt = 0;
+						var y1Pcnt = 0;
 
-							var x1Pcnt = 0;
-							var y1Pcnt = 0;
-
-							var x2Pcnt = 100;
-							var y2Pcnt = 100;
-							if ( (angle-45)%180 / 180 > 0 && (angle-45)%180 / 180 < .5 ) {
-								originAxis = "Y";
-							}
-
-							if ( originAxis=="Y" ) {
-								if ( angle > 225 ) {
-									// bottom to top
-									x2Pcnt = ((angle-225))/90 * 100;
-									y2Pcnt = 0;
-									x1Pcnt = 100-x2Pcnt; 
-									y1Pcnt = 100;
-								} else {
-									x1Pcnt = ((angle-45))/90 * 100;
-									y1Pcnt = 0;
-									x2Pcnt = 100 - x1Pcnt;
-									y2Pcnt = 100;
-								}
-
-							} else {
-
-								if ( angle<45 || angle>=315 ) {
-									y2Pcnt = ((angle+225)%90)/90 * 100;
-									x2Pcnt = 0;
-									y1Pcnt = 100-y2Pcnt;
-									x1Pcnt = 100;
-								} else {
-									y1Pcnt = ((angle+45)%90)/90 * 100;
-									x1Pcnt = 0;
-									y2Pcnt = 100-y1Pcnt;
-									x2Pcnt = 100;
-								}
-							}
-
-							linearGradient.setAttribute("x1", x1Pcnt + "%");
-							linearGradient.setAttribute("y1", y1Pcnt + "%");
-							linearGradient.setAttribute("x2", x2Pcnt + "%");
-							linearGradient.setAttribute("y2", y2Pcnt + "%");
-
-							var stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-							stop1.setAttribute('offset', "0%");
-							stop1.setAttribute('stop-color', gradient.endColor);
-							linearGradient.appendChild( stop1 );
-
-							var stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-							stop2.setAttribute('offset', "100%");
-							stop2.setAttribute('stop-color', gradient.startColor);
-							linearGradient.appendChild( stop2 );
-
-							if ( !group.defs ) {
-								group.appendChild( document.createElementNS("http://www.w3.org/2000/svg", "defs") );
-							}
-
-							group.getElementsByTagName("defs")[0].appendChild( linearGradient );
-							this.setAttribute("fill", "url(#" + gradient.id + ")");
-							//this.setAttribute("stroke-width","1");
+						var x2Pcnt = 100;
+						var y2Pcnt = 100;
+						if ( (angle-45)%180 / 180 > 0 && (angle-45)%180 / 180 < .5 ) {
+							originAxis = "Y";
 						}
+
+						if ( originAxis=="Y" ) {
+							if ( angle > 225 ) {
+								// bottom to top
+								x2Pcnt = ((angle-225))/90 * 100;
+								y2Pcnt = 0;
+								x1Pcnt = 100-x2Pcnt; 
+								y1Pcnt = 100;
+							} else {
+								x1Pcnt = ((angle-45))/90 * 100;
+								y1Pcnt = 0;
+								x2Pcnt = 100 - x1Pcnt;
+								y2Pcnt = 100;
+							}
+
+						} else {
+
+							if ( angle<45 || angle>=315 ) {
+								y2Pcnt = ((angle+225)%90)/90 * 100;
+								x2Pcnt = 0;
+								y1Pcnt = 100-y2Pcnt;
+								x1Pcnt = 100;
+							} else {
+								y1Pcnt = ((angle+45)%90)/90 * 100;
+								x1Pcnt = 0;
+								y2Pcnt = 100-y1Pcnt;
+								x2Pcnt = 100;
+							}
+						}
+
+						linearGradient.setAttribute("x1", x1Pcnt + "%");
+						linearGradient.setAttribute("y1", y1Pcnt + "%");
+						linearGradient.setAttribute("x2", x2Pcnt + "%");
+						linearGradient.setAttribute("y2", y2Pcnt + "%");
+
+						var stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+						stop1.setAttribute('offset', "0%");
+						stop1.setAttribute('stop-color', gradient.endColor);
+						linearGradient.appendChild( stop1 );
+
+						var stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+						stop2.setAttribute('offset', "100%");
+						stop2.setAttribute('stop-color', gradient.startColor);
+						linearGradient.appendChild( stop2 );
+
+						if ( !group.defs ) {
+							group.appendChild( document.createElementNS("http://www.w3.org/2000/svg", "defs") );
+						}
+
+						group.getElementsByTagName("defs")[0].appendChild( linearGradient );
+						this.setAttribute("fill", "url(#" + gradient.id + ")");
+						//this.setAttribute("stroke-width","1");
 					}
 				}
 			}
-			
-			return svgElement;		
-
-		} else if ( this.vml_capable ) {
-			if ( element == "svg" ) {
-				return createVMLSurface();
-			} else if ( element == "g" ) {
-				return createVMLGroup();
-			} else if ( element == "circle") {
-				return createVMLCircle();
-			} else if ( element == "ellipse") {
-				return createVMLEllipse();
-			} else if ( element == "rect") {
-				return createVMLRectangle();
-			} else if ( element == "line") {
-				return createVMLLine();
-			} else if ( element == "polyline") {
-				return createVMLPolyLine();
-			} else if (element == "linearGradient") {
-				return createVMLLinearGradient();
-			} else if( element == "stop" ) {
-				return createVMLStop();
-			} else if( element == "defs" ) {
-				return createVMLDefs();
-			}
-
-		} else {
-			// throw an exception? do HTML?
 		}
+		
+		return svgElement;		
+
+	} else if ( this.vml_capable ) {
+		if ( element == "svg" ) {
+			return createVMLSurface();
+		} else if ( element == "g" ) {
+			return createVMLGroup();
+		} else if ( element == "circle") {
+			return createVMLCircle();
+		} else if ( element == "ellipse") {
+			return createVMLEllipse();
+		} else if ( element == "rect") {
+			return createVMLRectangle();
+		} else if ( element == "line") {
+			return createVMLLine();
+		} else if ( element == "polyline") {
+			return createVMLPolyLine();
+		} else if (element == "linearGradient") {
+			return createVMLLinearGradient();
+		} else if( element == "stop" ) {
+			return createVMLStop();
+		} else if( element == "defs" ) {
+			return createVMLDefs();
+		}
+
+	} else {
+		// throw an exception? do HTML?
 	}
-}
+};
 
 var createVMLSurface = function() {
-//	var domElement = document.createElement("v:group");	
 	var domElement = document.createElement("div");
-	domElement.style.position = "absolute";
-	domElement.style.left = "0px";
-	domElement.style.top = "0px";
+	domElement.style.position = "relative";
+
+	domElement.baseInit = false;
+	domElement.baseX = 0;
+	domElement.baseY = 0;
 
 	domElement.setAttribute = function( key, value ) {
 		if ( key == "width" ) {
@@ -169,6 +164,10 @@ var createVMLSurface = function() {
 			this.style.left = value;
 		} else if ( key == "y" ) {
 			this.style.top = value;
+		} else if ( key == "viewBox" ) {
+			var parts = value.split(" ");
+			domElement.style.left = this.baseX + (parseInt(parts[2])+parseInt(parts[0]))+"px";
+			domElement.style.top = this.baseY + (parseInt(parts[3])+parseInt(parts[1]))+"px";
 		}
 	}
 	
@@ -176,7 +175,6 @@ var createVMLSurface = function() {
 };
 
 var createVMLGroup = function() {
-//	var domElement = document.createElement("v:group");	
 	var domElement = document.createElement("div");
 	domElement.style.position = "absolute";
 	domElement.style.left = "0px";
@@ -214,8 +212,7 @@ var createVMLGroup = function() {
 				child.style.top = top * yScale + 'px';
 			}
 		}
-	}
-	
+	}	
 	return domElement;
 };
 
@@ -383,6 +380,8 @@ var createVMLEllipse = function() {
 	
 	return domElement;
 };
+
+var linearGradients = new Object();
 
 var LinearGradient = function( id, startColor, endColor, angle ) {
 	this.init( id, startColor, endColor, angle );
@@ -795,4 +794,7 @@ LinGradient.prototype = {
 	appendChild: function( stop ) {
 		this.stops.push(stop);
 	}
-}
+};
+
+// initialize
+new svg2vml();
