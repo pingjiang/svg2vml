@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Example using SVG syntax</title>
+		<script src="SVG2VMLv1_1.js"></script>
+		
+		<script>
+			function debug(msg) {
+				document.getElementById("debug").innerHTML += msg + "<br>";
+			}
+			
+			function go() {
+				var vectorModel = new VectorModel();
+				var container = document.getElementById("content");
+				var mySvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+				container.appendChild(mySvg);
+				mySvg.setAttribute("version", "1.1");
+				var myG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+				mySvg.appendChild(myG);
+				
+				var myRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+				myRect.setAttribute("x", 10);
+				myRect.setAttribute("y", 10);
+				myRect.setAttribute("width", "200px");
+				myRect.setAttribute("height", "200px");
+				myRect.setAttribute("stroke","#3399ff");
+				myRect.setAttribute("stroke-width", "4px");
+				myRect.setAttribute("fill", "#FFFFFF");
+				myG.appendChild(myRect);
+				
+				
+				var myRoundRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+				myRoundRect.setAttribute("x", 250);
+				myRoundRect.setAttribute("y", 10);
+				myRoundRect.setAttribute("width", "200px");
+				myRoundRect.setAttribute("height", "200px");
+				myRoundRect.setAttribute("stroke","#ff6699");
+				myRoundRect.setAttribute("stroke-width", "4px");
+				myRoundRect.setAttribute("fill", "#FFCCCC");
+				myRoundRect.setAttribute("rx", "5");
+				myRoundRect.setAttribute("ry", "5");
+				myG.appendChild(myRoundRect);
+				
+				var linearGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+				linearGradient.setAttribute("id", "gradId");
+				linearGradient.setAttribute("x1", 50 + "%");
+				linearGradient.setAttribute("y1", 0 + "%");
+				linearGradient.setAttribute("x2", 50 + "%");
+				linearGradient.setAttribute("y2", 100 + "%");
+				var stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+				stop1.setAttribute('offset', "0%");
+				stop1.setAttribute('stop-color', "#ffaaaa");
+				linearGradient.appendChild( stop1 );
+				var stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+				stop2.setAttribute('offset', "100%");
+				stop2.setAttribute('stop-color', "#ffffff");
+				linearGradient.appendChild( stop2 );
+				var group = myRoundRect.parentNode;
+				//if ( !group.defs ) {
+					var myDefs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+					group.appendChild( myDefs );
+				//}
+				group.getElementsByTagName("defs")[0].appendChild( linearGradient );
+				myRoundRect.setAttribute("fill", "url(#gradId)");
+				
+				
+				var myGradRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+				myGradRect.setAttribute("x", 500);
+				myGradRect.setAttribute("y", 10);
+				myGradRect.setAttribute("width", "200px");
+				myGradRect.setAttribute("height", "200px");
+				myGradRect.setAttribute("stroke","#ffCC33");
+				myGradRect.setAttribute("stroke-width", "4px");
+				//myGradRect.setAttribute("fill", "#FFFF99");
+				myGradRect.setAttribute("rx", "10");
+				myGradRect.setAttribute("ry", "10");
+				myG.appendChild(myGradRect);
+				
+				
+				var linearGradientb = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+				linearGradientb.setAttribute("id", "gradIdb");
+				linearGradientb.setAttribute("x1", 25 + "%");
+				linearGradientb.setAttribute("y1", 25 + "%");
+				linearGradientb.setAttribute("x2", 100 + "%");
+				linearGradientb.setAttribute("y2", 100 + "%");
+				var stop1b = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+				stop1b.setAttribute('offset', "0%");
+				stop1b.setAttribute('stop-color', "#FFFF99");
+				linearGradientb.appendChild( stop1b );
+				var stop2b = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+				stop2b.setAttribute('offset', "100%");
+				stop2b.setAttribute('stop-color', "#ffffff");
+				linearGradientb.appendChild( stop2b );
+				var groupb = myGradRect.parentNode;
+				//if ( !group.defs ) {
+					var myDefsb = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+					groupb.appendChild( myDefsb );
+				//}
+				groupb.getElementsByTagName("defs")[0].appendChild( linearGradientb );
+				myGradRect.setAttribute("fill", "url(#gradIdb)");
+				
+				
+				var myGradRect1 = vectorModel.createElement("rect");
+				myGradRect1.setAttribute("x", 750);
+				myGradRect1.setAttribute("y", 10);
+				myGradRect1.setAttribute("width", "200px");
+				myGradRect1.setAttribute("height", "200px");
+				myGradRect1.setAttribute("stroke","#00CC00");
+				myGradRect1.setAttribute("stroke-width", "4px");
+				myGradRect1.setAttribute("rx", "10");
+				myGradRect1.setAttribute("ry", "10");
+				myG.appendChild(myGradRect1);
+				var linearGrad = new LinearGradient("myGrad", "#CCFFAA", "#FFFFFF", 90);
+				myGradRect1.applyGradient(linearGrad);
+				
+				
+				var myCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+				myCircle.setAttribute("cx", 640);
+				myCircle.setAttribute("cy", 310);
+				myCircle.setAttribute("r", 100);
+				myCircle.setAttribute("stroke", "#00CC00");
+				myCircle.setAttribute("stroke-width", "4px");
+				myCircle.setAttribute("fill", "#FFFFFF");
+				myG.appendChild(myCircle);
+				myCircle.setAttribute("r", 10);
+				
+				var myEllipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+				myEllipse.setAttribute("cx", 260);
+				myEllipse.setAttribute("cy", 335);
+				myEllipse.setAttribute("rx", 150);
+				myEllipse.setAttribute("ry", 100);
+				myEllipse.setAttribute("stroke", "#cc33ff");
+				myEllipse.setAttribute("stroke-width", "4px");
+				myEllipse.setAttribute("fill", "#EECCFF");
+				myG.appendChild(myEllipse);
+				//myEllipse.setAttribute("rx", 200);
+			}
+		</script>
+
+	</head>
+	<body onload="go();">
+		<div id="content"></div>
+		<div id="debug" style="position:absolute; top:250px;"></div>
+	</body>
+</html>
