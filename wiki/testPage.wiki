@@ -1,5 +1,8 @@
 = Introduction =
-<wiki:gadget url="http://svg2vml.googlecode.com/svn/branches/Wilko/example.xml" width="100%" height="600" border="0" up_example="svg2vmlExample1.html"/> 
-<wiki:gadget url="http://svg2vml.googlecode.com/svn/branches/Wilko/example.xml" width="100%" height="600" border="0" up_example="svg2vmlExample3.html"/> 
-<wiki:gadget url="http://svg2vml.googlecode.com/svn/branches/Wilko/example.xml" width="100%" height="600" border="0" up_example="svg2vmlRoundedDiv.html"/> 
-<wiki:gadget url="http://svg2vml.googlecode.com/svn/branches/Wilko/example.xml" width="100%" height="600" border="0" up_example="svg2vmlPathExample.html"/> 
+<wiki:gadget url="http://svg2vml.googlecode.com/svn/branches/Wilko/example.xml" width="100%" height="500" border="0" up_example="svg2vmlExample1.html?2"/> 
+----
+<wiki:gadget url="http://svg2vml.googlecode.com/svn/branches/Wilko/example.xml" width="100%" height="500" border="0" up_example="svg2vmlExample3.html?2"/> 
+----
+<wiki:gadget url="http://svg2vml.googlecode.com/svn/branches/Wilko/example.xml" width="100%" height="200" border="0" up_example="svg2vmlRoundedDiv.html?2"/> 
+----
+<wiki:gadget url="http://svg2vml.googlecode.com/svn/branches/Wilko/example.xml" width="100%" height="200" border="0" up_example="svg2vmlPathExample.html?2"/> 
