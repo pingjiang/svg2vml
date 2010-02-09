@@ -1,2 +1,2 @@
 = Introduction =
-<wiki:gadget url="http://svg2vml.googlecode.com/svn/branches/Wilko/example.xml?" width="100%" height="600" border="0" /> 
+<wiki:gadget url="http://svg2vml.googlecode.com/svn/branches/Wilko/example.xml?" width="100%" height="600" border="0" up_example="svg2vmlExample1.html"/> 
