@@ -1,0 +1,3 @@
+#test Page just ignore
+= Introduction =
+<wiki:gadget url="http://code.google.com/p/svg2vml/source/browse/branches/Wilko/example.xml" width="100%" height="600" border="0" /> 
