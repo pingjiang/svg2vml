@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
   <ModulePrefs title="your doc title" width="400" height="600" scrolling="true" />
-  <Content type="url" href="http://svg2vml.googlecode.com/svn/branches/Wilko/svg2vmlExample1.htm"/>
+  <Content type="url" href="http://svg2vml.googlecode.com/svn/branches/Wilko/svg2vmlExample1.html"/>
 </Module> 
