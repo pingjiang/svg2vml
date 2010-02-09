@@ -15,145 +15,161 @@
  * Copyright: 2006-2007
  */
 
-// TODO:(kyle) Why aren't the create functions part of the svg2vml class?
-var svg2vml = function() {
-	svg2vml.prototype.svg_capable = document.implementation.hasFeature("org.w3c.dom.svg", '1.1');
-	svg2vml.prototype.vml_capable = (document.all && !(navigator.userAgent.indexOf("Opera")>=0)) ? true : false;
-
-	if ( this.vml_capable ) {
-		document.namespaces.add("v","urn:schemas-microsoft-com:vml");
-		document.createStyleSheet().addRule("v\\:*", "behavior:url(#default#VML); position:absolute" );
-
-		var me = this;
-		document.createElementNS = function( ns, element ) {
-			return me.createElement( element );
-		}
-	}
+var VectorModel = function() {
+	this.init();
 };
 
-svg2vml.prototype.svg_capable = false;
-svg2vml.prototype.vml_capable = false;
+var linearGradients = new Object();
 
-svg2vml.prototype.createElement = function( element ) {
-	if ( this.svg_capable ) {
-		var svgElement = document.createElementNS("http://www.w3.org/2000/svg", element);
+VectorModel.prototype = {
+	init: function() {
+		this.svg_capable = document.implementation.hasFeature("org.w3c.dom.svg", '1.1');
+		this.vml_capable = (document.all && !(navigator.userAgent.indexOf("Opera")>=0)) ? true : false;
 		
-		if ( element == "rect" ) {
-			svgElement.applyGradient = function( gradient ) {
-				if ( gradient.type == "LinearGradient" ) {
-					var group = svgElement.parentNode;
+		if ( this.vml_capable ) {
+			document.namespaces.add('v','urn:schemas-microsoft-com:vml');
+//			document.createStyleSheet().addRule("v\\:*", "behavior:url(#default#VML)");
+			document.createStyleSheet().addRule("v\\: *", "behavior:url(#default#VML); position:absolute" );
+			document.createStyleSheet().addRule("v\\:roundrect", "behavior:url(#default#VML); position:absolute" );
+			document.createStyleSheet().addRule("v\\:oval", "behavior:url(#default#VML); position:absolute" );
+			document.createStyleSheet().addRule("v\\:roundrect", "behavior:url(#default#VML); position:absolute" );
+			document.createStyleSheet().addRule("v\\:fill", "behavior:url(#default#VML); position:absolute" );
+			document.createStyleSheet().addRule("v\\:line", "behavior:url(#default#VML); position:absolute" );
+			document.createStyleSheet().addRule("v\\:shape", "behavior:url(#default#VML); position:absolute" );
+			document.createStyleSheet().addRule("v\\:polyline", "behavior:url(#default#VML); position:absolute" );
+			document.createStyleSheet().addRule("v\\:stroke", "behavior:url(#default#VML); position:absolute" );
 
-					if ( !document.getElementById(gradient.id ) ) {
-						var linearGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
-						linearGradient.id = gradient.id;
-						
-						// the gradient angle is orthoganal to our base angle
-						var angle = (gradient.angle + 90) % 360;
-						if ( angle<0 ) { angle = angle%360 + 360; }
-						var originAxis = "X";
 
-						var x1Pcnt = 0;
-						var y1Pcnt = 0;
+			var me = this;
+			document.createElementNS = function( ns, element ) {
+				return me.createElement( element );
+			}
+		}
+	},
+	
+	createElement: function( element ) {
 
-						var x2Pcnt = 100;
-						var y2Pcnt = 100;
-						if ( (angle-45)%180 / 180 > 0 && (angle-45)%180 / 180 < .5 ) {
-							originAxis = "Y";
-						}
+		if ( this.svg_capable ) {
+			var svgElement = document.createElementNS("http://www.w3.org/2000/svg", element);
+			
+			if ( element == "rect" ) {
+				svgElement.applyGradient = function( gradient ) {
+					if ( gradient.type == "LinearGradient" ) {
+						var group = svgElement.parentNode;
 
-						if ( originAxis=="Y" ) {
-							if ( angle > 225 ) {
-								// bottom to top
-								x2Pcnt = ((angle-225))/90 * 100;
-								y2Pcnt = 0;
-								x1Pcnt = 100-x2Pcnt; 
-								y1Pcnt = 100;
-							} else {
-								x1Pcnt = ((angle-45))/90 * 100;
-								y1Pcnt = 0;
-								x2Pcnt = 100 - x1Pcnt;
-								y2Pcnt = 100;
+						if ( !document.getElementById(gradient.id ) ) {
+							var linearGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+							linearGradient.id = gradient.id;
+							
+							// the gradient angle is orthoganal to our base angle
+							var angle = (gradient.angle + 90) % 360;
+							if ( angle<0 ) { angle = angle%360 + 360; }
+							var originAxis = "X";
+
+							var x1Pcnt = 0;
+							var y1Pcnt = 0;
+
+							var x2Pcnt = 100;
+							var y2Pcnt = 100;
+							if ( (angle-45)%180 / 180 > 0 && (angle-45)%180 / 180 < .5 ) {
+								originAxis = "Y";
 							}
 
-						} else {
+							if ( originAxis=="Y" ) {
+								if ( angle > 225 ) {
+									// bottom to top
+									x2Pcnt = ((angle-225))/90 * 100;
+									y2Pcnt = 0;
+									x1Pcnt = 100-x2Pcnt; 
+									y1Pcnt = 100;
+								} else {
+									x1Pcnt = ((angle-45))/90 * 100;
+									y1Pcnt = 0;
+									x2Pcnt = 100 - x1Pcnt;
+									y2Pcnt = 100;
+								}
 
-							if ( angle<45 || angle>=315 ) {
-								y2Pcnt = ((angle+225)%90)/90 * 100;
-								x2Pcnt = 0;
-								y1Pcnt = 100-y2Pcnt;
-								x1Pcnt = 100;
 							} else {
-								y1Pcnt = ((angle+45)%90)/90 * 100;
-								x1Pcnt = 0;
-								y2Pcnt = 100-y1Pcnt;
-								x2Pcnt = 100;
+
+								if ( angle<45 || angle>=315 ) {
+									y2Pcnt = ((angle+225)%90)/90 * 100;
+									x2Pcnt = 0;
+									y1Pcnt = 100-y2Pcnt;
+									x1Pcnt = 100;
+								} else {
+									y1Pcnt = ((angle+45)%90)/90 * 100;
+									x1Pcnt = 0;
+									y2Pcnt = 100-y1Pcnt;
+									x2Pcnt = 100;
+								}
 							}
+
+							linearGradient.setAttribute("x1", x1Pcnt + "%");
+							linearGradient.setAttribute("y1", y1Pcnt + "%");
+							linearGradient.setAttribute("x2", x2Pcnt + "%");
+							linearGradient.setAttribute("y2", y2Pcnt + "%");
+
+							var stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+							stop1.setAttribute('offset', "0%");
+							stop1.setAttribute('stop-color', gradient.endColor);
+							linearGradient.appendChild( stop1 );
+
+							var stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+							stop2.setAttribute('offset', "100%");
+							stop2.setAttribute('stop-color', gradient.startColor);
+							linearGradient.appendChild( stop2 );
+
+							if ( !group.defs ) {
+								group.appendChild( document.createElementNS("http://www.w3.org/2000/svg", "defs") );
+							}
+
+							group.getElementsByTagName("defs")[0].appendChild( linearGradient );
+							this.setAttribute("fill", "url(#" + gradient.id + ")");
+							//this.setAttribute("stroke-width","1");
 						}
-
-						linearGradient.setAttribute("x1", x1Pcnt + "%");
-						linearGradient.setAttribute("y1", y1Pcnt + "%");
-						linearGradient.setAttribute("x2", x2Pcnt + "%");
-						linearGradient.setAttribute("y2", y2Pcnt + "%");
-
-						var stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-						stop1.setAttribute('offset', "0%");
-						stop1.setAttribute('stop-color', gradient.endColor);
-						linearGradient.appendChild( stop1 );
-
-						var stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
-						stop2.setAttribute('offset', "100%");
-						stop2.setAttribute('stop-color', gradient.startColor);
-						linearGradient.appendChild( stop2 );
-
-						if ( !group.defs ) {
-							group.appendChild( document.createElementNS("http://www.w3.org/2000/svg", "defs") );
-						}
-
-						group.getElementsByTagName("defs")[0].appendChild( linearGradient );
-						this.setAttribute("fill", "url(#" + gradient.id + ")");
-						//this.setAttribute("stroke-width","1");
 					}
 				}
 			}
-		}
-		
-		return svgElement;		
+			
+			return svgElement;		
 
-	} else if ( this.vml_capable ) {
-		if ( element == "svg" ) {
-			return createVMLSurface();
-		} else if ( element == "g" ) {
-			return createVMLGroup();
-		} else if ( element == "circle") {
-			return createVMLCircle();
-		} else if ( element == "ellipse") {
-			return createVMLEllipse();
-		} else if ( element == "rect") {
-			return createVMLRectangle();
-		} else if ( element == "line") {
-			return createVMLLine();
-		} else if ( element == "polyline") {
-			return createVMLPolyLine();
-		} else if (element == "linearGradient") {
-			return createVMLLinearGradient();
-		} else if( element == "stop" ) {
-			return createVMLStop();
-		} else if( element == "defs" ) {
-			return createVMLDefs();
-		}
+		} else if ( this.vml_capable ) {
+			if ( element == "svg" ) {
+				return createVMLSurface();
+			} else if ( element == "g" ) {
+				return createVMLGroup();
+			} else if ( element == "circle") {
+				return createVMLCircle();
+			} else if ( element == "ellipse") {
+				return createVMLEllipse();
+			} else if ( element == "rect") {
+				return createVMLRectangle();
+			} else if ( element == "line") {
+				return createVMLLine();
+			} else if (element == "linearGradient") {
+				return createVMLLinearGradient();
+			} else if( element == "stop" ) {
+				return createVMLStop();
+			} else if( element == "defs" ) {
+				return createVMLDefs();
+			} else if ( element == "polyline") {
+				return createVMLPolyline();
+			} else if ( element == "path") {
+				return createVMLPath();
+			}
 
-	} else {
-		// throw an exception? do HTML?
+		} else {
+			// throw an exception? do HTML?
+		}
 	}
-};
+}
 
 var createVMLSurface = function() {
+//	var domElement = document.createElement("v:group");	
 	var domElement = document.createElement("div");
-	domElement.style.position = "relative";
-
-	domElement.baseInit = false;
-	domElement.baseX = 0;
-	domElement.baseY = 0;
+	domElement.style.position = "absolute";
+	domElement.style.left = "0px";
+	domElement.style.top = "0px";
 
 	domElement.setAttribute = function( key, value ) {
 		if ( key == "width" ) {
@@ -164,10 +180,6 @@ var createVMLSurface = function() {
 			this.style.left = value;
 		} else if ( key == "y" ) {
 			this.style.top = value;
-		} else if ( key == "viewBox" ) {
-			var parts = value.split(" ");
-			domElement.style.left = this.baseX + (parseInt(parts[2])+parseInt(parts[0]))+"px";
-			domElement.style.top = this.baseY + (parseInt(parts[3])+parseInt(parts[1]))+"px";
 		}
 	}
 	
@@ -175,6 +187,7 @@ var createVMLSurface = function() {
 };
 
 var createVMLGroup = function() {
+//	var domElement = document.createElement("v:group");	
 	var domElement = document.createElement("div");
 	domElement.style.position = "absolute";
 	domElement.style.left = "0px";
@@ -192,27 +205,41 @@ var createVMLGroup = function() {
 		} else if ( key == "y" ) {
 			this.style.top = value;
 		} else if ( key == "transform" ) {
-			var reg = /scale\s*\(\s*(\d+\.\d+)\s*(\d+\.\d+)\s*\)/i;
+			//var reg = /scale\s*\(\s*(\d+\.\d+)\s*(\d+\.\d+)\s*\)/i;
+			var reg = /scale\s*\(\s*([-+]?[0-9]*\.?[0-9]+)(\s+([-+]?[0-9]*\.?[0-9]+))?\s*\)/i;
 			var ar = reg.exec(value);
 			var xScale = 1;
 			var yScale = 1;
 			if( ar ){
 				xScale = ar[1];
-				yScale = ar[2];
+				yScale = (ar[2] ? ar[2] : ar[1]);
 			}
+
 			for( var i=0; i<this.childNodes.length; i++ ){
 				var child = this.childNodes[i];
-				var width = parseInt(child.style.width);
+                                if (!child.originalWidth){
+					child.originalWidth=child.style.width;
+					child.originalheight=child.style.height;
+					child.originalleft=child.style.left;
+					child.originaltop=child.style.top;
+					//debug("orginals saved");
+				}
+				var width = parseInt(child.originalWidth);
+				var height = parseInt(child.originalheight);
+				var left = parseInt(child.originalleft);
+				var top = parseInt(child.originaltop);
+				/*var width = parseInt(child.style.width);
 				var height = parseInt(child.style.height);
 				var left = parseInt(child.style.left);
-				var top = parseInt(child.style.top);
+				var top = parseInt(child.style.top);*/
 				child.style.width = width * xScale + 'px';
 				child.style.height = height * yScale + 'px';
-				child.style.left = left * xScale + 'px';
-				child.style.top = top * yScale + 'px';
+				child.style.left = (left ? left : 0) * xScale + 'px';
+				child.style.top = (top ? top : 0) * yScale + 'px';
 			}
 		}
-	}	
+	}
+	
 	return domElement;
 };
 
@@ -380,8 +407,6 @@ var createVMLEllipse = function() {
 	
 	return domElement;
 };
-
-var linearGradients = new Object();
 
 var LinearGradient = function( id, startColor, endColor, angle ) {
 	this.init( id, startColor, endColor, angle );
@@ -579,77 +604,86 @@ var createVMLLine = function() {
 	return domElement;
 };
 
-var createVMLPolyLine = function() {
+var createVMLPolyline = function() {
 	var domElement = document.createElement("v:polyline");
-	
-	domElement.setAttribute = function( key, value ) {
+	domElement.style.width = '21600';
+	domElement.style.height = '21600';
+	domElement.coordsize = '21600, 21600';
+	domElement.style.position = "absolute";
+	domElement.endcap="square";
+	var domElementChild = document.createElement("v:stroke");
+	domElementChild.joinstyle="miter";
+	domElement.appendChild(domElementChild);
 
-		if ( key == "x1" ) {
-			this.x1 = value;
-			this.y1 = this.y1 ? this.y1 : 0;
-			this.from = this.x1 + ' ' + this.y1;
-			return;
-		} else if ( key == "y1" ) {
-			this.y1 = value;
-			this.x1 = this.x1 ? this.x1 : 0;
-			this.from = this.x1 + ' ' + this.y1;
-			return;
-		} else if ( key == "x2" ) {
-			this.x2 = value;
-			this.y2 = this.y2 ? this.y2 : 0;
-			this.to = this.x2 + ' ' + this.y2;
-			return;
-		} else if ( key == "y2" ) {
-			this.y2 = value;
-			this.x2 = this.x2 ? this.x2 : 0;
-			this.to = this.x2 + ' ' + this.y2;
-			return;
-		} else if ( key == "stroke" ) {
-			this.strokecolor = value;
-			return;
-		} else if ( key == "stroke-width" ) {
-			this.strokeweight = parseFloat(value)/1.2 + "pt";
-			return;
-		} else if ( key == "fill" ) {
-			this.fillcolor = value;
-			return;
-		} else if ( key == "points" ) {
-			this.points = value;
-			return;
-		}
+	domElement.getBBox = function () {
+		return {
+			x: this.style.left,
+			y: this.style.top,
+			width: this.style.width,
+			height: this.style.height
+		};
 	}
 
-	domElement.getAttribute = function( key ) {
+	domElement.setAttribute = function( key, value ) {
+		if ( key == "points" ) {
+			this.points = value; return;
+		} else if ( key == "stroke" ) {
+			this.strokecolor = value; return;
+		} else if ( key == "stroke-width" ) {
+			this.strokeweight = parseFloat(value)/1.2 + "pt"; return;
+		} else if ( key == "fill" ) {
+			this.filled=(value == "none" ? 0 : 1);
+			this.fillcolor = value ;
+			return;
+		} else if ( key == "transform" ) {
+			//var reg = /scale\s*\(\s*(\d+(\.\d+)?)(\s+(\d+(\.\d+)?))*\s*\)/i;
+			var reg = /scale\s*\(\s*([-+]?[0-9]*\.?[0-9]+)(\s+([-+]?[0-9]*\.?[0-9]+))?\s*\)/i;
+			var ar = reg.exec(value);
+			var xScale = 1;
+			var yScale = 1;
+			if( ar ){
+				xScale = ar[1];
+				yScale = (ar[2] ? ar[2] : ar[1]);
+			}
+			//for( var i=0; i<this.childNodes.length; i++ ){
 
-		if ( key == "x1" ) {
-			if ( !this.x1 ) { return 0; }
-			return x1;
-		} else if ( key == "y1" ) {
-			if ( !this.y1 ) { return 0; }
-			return y1;
-		} else if ( key == "x2" ) {
-			if ( !this.x2 ) { return 0; }
-			return x2;
-		} else if ( key == "y2" ) {
-			if ( !this.y2 ) { return 0; }
-			return y2;
+				var child = this; //.childNodes[i];
+				if (!this.originalWidth){
+					this.originalWidth=this.style.width;
+					this.originalheight=this.style.height;
+					this.originalleft=this.style.left;
+					this.originaltop=this.style.top;
+					debug("orginals saved");
+				}
+				var width = parseInt(child.originalWidth);
+				var height = parseInt(child.originalheight);
+				var left = parseInt(child.originalleft);
+				var top = parseInt(child.originaltop);
+				child.style.width = width * xScale + 'px';
+				child.style.height = height * yScale + 'px';
+				child.style.left = (left ? left : 0) * xScale + 'px';
+				child.style.top = (top ? top : 0) * yScale + 'px';
+			//}
+		}
+	}
+	domElement.getAttribute = function( key ) {
+		if ( key == "points" ) {
+			if ( !this.points ) { return 0; } return points;
 		} else if ( key == "stroke" ) {
 			return this.strokecolor;
 		} else if ( key == "stroke-width" ) {
-			return parseFloat( this.strokecolor ) * 1.2 + 'px';
+			return parseFloat( this.strokecolor ) / 1.2 + 'px';
 		} else if ( key == "fill" ) {
-			return this.fillcolor;
+			return (this.filled ? this.fillcolor : "none");
 		} else if ( key == "width" ) {
 			return parseInt( this.style.width );
 		} else if ( key == "height" ) {
 			return parseInt( this.style.height );
-		} else if ( key == "points" ) {
-			return this.points;
 		}
 	}
-	
+
 	return domElement;
-};
+}
 
 var createVMLPath = function() {
 
@@ -692,7 +726,7 @@ var createVMLPath = function() {
 					// SVG: rx ry x-axis-rotation large-arc-flag sweep-flag x y
 					// VML: center (x,y) size(w,h) start-angle, end-angle
 
-var command = "ae";
+						var command = "ae";
 						var args = params.split(/[, ]+/);
 						args[0] = parseInt(args[0]); 
 						args[1] = parseInt(args[1]);
@@ -794,7 +828,5 @@ LinGradient.prototype = {
 	appendChild: function( stop ) {
 		this.stops.push(stop);
 	}
-};
+}
 
-// initialize
-new svg2vml();
