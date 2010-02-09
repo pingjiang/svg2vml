@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>svg2vml example</title>
+		<script src="SVG2VMLv1_1.js"></script>
+		
+		<script>
+			function go() {
+				var vectorModel = new VectorModel();
+				var container = document.getElementById("content");
+				var mySvg = vectorModel.createElement("svg");
+				container.appendChild(mySvg);
+				mySvg.setAttribute("version", "1.1");
+				var myG = vectorModel.createElement("g");
+				mySvg.appendChild(myG);
+				var myRect = vectorModel.createElement("rect");
+				myRect.setAttribute("x", 10);
+				myRect.setAttribute("y", 10);
+				myRect.setAttribute("width", "200px");
+				myRect.setAttribute("height", "200px");
+				myRect.setAttribute("stroke","#3399ff");
+				myRect.setAttribute("stroke-width", "4px");
+				myRect.setAttribute("fill", "#FFFFFF");
+				myG.appendChild(myRect);
+				
+				
+				var myRoundRect = vectorModel.createElement("rect");
+				myRoundRect.setAttribute("x", 250);
+				myRoundRect.setAttribute("y", 10);
+				myRoundRect.setAttribute("width", "200px");
+				myRoundRect.setAttribute("height", "200px");
+				myRoundRect.setAttribute("stroke","#ff6699");
+				myRoundRect.setAttribute("stroke-width", "4px");
+				myRoundRect.setAttribute("fill", "#FFCCCC");
+				myRoundRect.setAttribute("rx", "5");
+				myRoundRect.setAttribute("ry", "5");
+				myG.appendChild(myRoundRect);
+				
+				
+				var myGradRect = vectorModel.createElement("rect");
+				myGradRect.setAttribute("x", 500);
+				myGradRect.setAttribute("y", 10);
+				myGradRect.setAttribute("width", "200px");
+				myGradRect.setAttribute("height", "200px");
+				myGradRect.setAttribute("stroke","#ffCC33");
+				myGradRect.setAttribute("stroke-width", "4px");
+				myGradRect.setAttribute("fill", "#FFFF99");
+				myGradRect.setAttribute("rx", "10");
+				myGradRect.setAttribute("ry", "10");
+				myG.appendChild(myGradRect);
+				var linearGrad = new LinearGradient("myGrad", "#FFFF99", "#FFFFFF", 90);
+				myGradRect.applyGradient(linearGrad);
+				
+				var myCircle = vectorModel.createElement("circle");
+				myCircle.setAttribute("r", 100);
+				myCircle.setAttribute("cx", 840);
+				myCircle.setAttribute("cy", 110);
+				myCircle.setAttribute("stroke", "#00CC00");
+				myCircle.setAttribute("stroke-width", "4px");
+				myCircle.setAttribute("fill", "#FFFFFF");
+				myG.appendChild(myCircle);
+				
+				var myEllipse = vectorModel.createElement("ellipse");
+				myEllipse.setAttribute("rx", 150);
+				myEllipse.setAttribute("ry", 100);
+				myEllipse.setAttribute("cx", 160);
+				myEllipse.setAttribute("cy", 335);
+				myEllipse.setAttribute("stroke", "#cc33ff");
+				myEllipse.setAttribute("stroke-width", "4px");
+				myEllipse.setAttribute("fill", "#EECCFF");
+				myG.appendChild(myEllipse);
+				
+			}
+		</script>
+		
+	</head>
+	
+	<body onload="go();">
+		<div id="content"></div>
+	</body>
+</html>
