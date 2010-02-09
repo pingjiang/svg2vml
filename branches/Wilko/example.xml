@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Module>
-  <ModulePrefs title="SVG2VML Examples" width="400" height="600" scrolling="true" />
-  <UserPref name="example" display_name="Example Page filename"/>
+  <ModulePrefs title="SVG2VML Examples" scrolling="true" />
+  <UserPref name="example" display_name="Example Page filename" required="true"/>
   <Content type="url" href="http://svg2vml.googlecode.com/svn/branches/Wilko/__UP_example__"/>
 </Module> 
