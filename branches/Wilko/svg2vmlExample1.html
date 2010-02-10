@@ -9,12 +9,12 @@
 			function go() {
 				var vectorModel = new VectorModel();
 				var container = document.getElementById("content");
-				var mySvg = document.createElement("http://www.w3.org/2000/svg", "svg");
+				var mySvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 				container.appendChild(mySvg);
 				mySvg.setAttribute("version", "1.1");
-				var myG = document.createElement("http://www.w3.org/2000/svg", "g");
+				var myG = document.createElementNS("http://www.w3.org/2000/svg", "g");
 				mySvg.appendChild(myG);
-				var myRect = document.createElement("http://www.w3.org/2000/svg", "rect");
+				var myRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 				myRect.setAttribute("x", 10);
 				myRect.setAttribute("y", 10);
 				myRect.setAttribute("width", "200px");
@@ -25,7 +25,7 @@
 				myG.appendChild(myRect);
 				
 				
-				var myRoundRect = document.createElement("http://www.w3.org/2000/svg", "rect");
+				var myRoundRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 				myRoundRect.setAttribute("x", 250);
 				myRoundRect.setAttribute("y", 10);
 				myRoundRect.setAttribute("width", "200px");
@@ -38,7 +38,7 @@
 				myG.appendChild(myRoundRect);
 				
 				
-				var myGradRect = document.createElement("http://www.w3.org/2000/svg", "rect");
+				var myGradRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
 				myGradRect.setAttribute("x", 500);
 				myGradRect.setAttribute("y", 10);
 				myGradRect.setAttribute("width", "200px");
@@ -52,7 +52,7 @@
 				var linearGrad = new LinearGradient("myGrad", "#FFFF99", "#FFFFFF", 90);
 				myGradRect.applyGradient(linearGrad);
 				
-				var myCircle = document.createElement("http://www.w3.org/2000/svg", "circle");
+				var myCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
 				myCircle.setAttribute("r", 100);
 				myCircle.setAttribute("cx", 840);
 				myCircle.setAttribute("cy", 110);
@@ -61,7 +61,7 @@
 				myCircle.setAttribute("fill", "#FFFFFF");
 				myG.appendChild(myCircle);
 				
-				var myEllipse = document.createElement("http://www.w3.org/2000/svg", "ellipse");
+				var myEllipse = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
 				myEllipse.setAttribute("rx", 150);
 				myEllipse.setAttribute("ry", 100);
 				myEllipse.setAttribute("cx", 160);
