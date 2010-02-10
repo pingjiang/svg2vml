@@ -13,13 +13,13 @@
 			function go() {
 				var vectorModel = new VectorModel();
 				var container = document.getElementById("content");
-				var mySvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+				var mySvg = document.createElement("http://www.w3.org/2000/svg", "svg");
 				container.appendChild(mySvg);
 				mySvg.setAttribute("version", "1.1");
-				var myG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+				var myG = document.createElement("http://www.w3.org/2000/svg", "g");
 				mySvg.appendChild(myG);
 				
-				var myLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+				var myLine = document.createElement("http://www.w3.org/2000/svg", "line");
 				myLine.setAttribute("x1", "5px");
 				myLine.setAttribute("y1", "5px");
 				myLine.setAttribute("x2", "100px");
@@ -28,7 +28,7 @@
 				myLine.setAttribute("stroke-width", "3");
 				myG.appendChild(myLine);
 				
-				var myRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+				var myRect = document.createElement("http://www.w3.org/2000/svg", "rect");
 				myRect.setAttribute("x", 130);
 				myRect.setAttribute("y", 5);
 				myRect.setAttribute("width", "100px");
@@ -38,7 +38,7 @@
 				myRect.setAttribute("fill", "#FFFFFF");
 				myG.appendChild(myRect);
 				
-				var myLine2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+				var myLine2 = document.createElement("http://www.w3.org/2000/svg", "line");
 				myLine2.setAttribute("x1", "133px");
 				myLine2.setAttribute("y1", "8px");
 				myLine2.setAttribute("x2", "227px");

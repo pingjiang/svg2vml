@@ -10,14 +10,14 @@
 				var vectorModel = new VectorModel();
 				var container = document.getElementById("content");
 				
-				var mySvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+				var mySvg = document.createElement("http://www.w3.org/2000/svg", "svg");
 				container.appendChild(mySvg);
 				mySvg.setAttribute("version", "1.1");
-				var myG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+				var myG = document.createElement("http://www.w3.org/2000/svg", "g");
 				mySvg.appendChild(myG);
 				
 				var divHeight = document.getElementById("photo").offsetHeight;
-				var myRoundRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+				var myRoundRect = document.createElement("http://www.w3.org/2000/svg", "rect");
 				myRoundRect.setAttribute("x", 2);
 				myRoundRect.setAttribute("y", 2);
 				myRoundRect.setAttribute("width", "200px");
