@@ -25,7 +25,9 @@ VectorModel.prototype = {
 	init: function() {
 		this.svg_capable = document.implementation.hasFeature("org.w3c.dom.svg", '1.1');
 		this.vml_capable = (document.all && !(navigator.userAgent.indexOf("Opera")>=0)) ? true : false;
-		
+		if (document.createElementNS){
+			document.svg2vmlcreateElementNS = document.createElementNS;
+		}
 		if ( this.vml_capable ) {
 			document.namespaces.add('v','urn:schemas-microsoft-com:vml');
 //			document.createStyleSheet().addRule("v\\:*", "behavior:url(#default#VML)");
@@ -38,27 +40,29 @@ VectorModel.prototype = {
 			document.createStyleSheet().addRule("v\\:shape", "behavior:url(#default#VML); position:absolute" );
 			document.createStyleSheet().addRule("v\\:polyline", "behavior:url(#default#VML); position:absolute" );
 			document.createStyleSheet().addRule("v\\:stroke", "behavior:url(#default#VML); position:absolute" );
-
-
-			var me = this;
-			document.createElementNS = function( ns, element ) {
+		} else {
+			this.svg_capable =true;
+		}
+		var me = this;
+		document.createElementNS = function( ns, element ) {
+			if (ns == "http://www.w3.org/2000/svg"){
 				return me.createElement( element );
+			} else {
+				return document.svg2vmlcreateElementNS(ns, element);
 			}
 		}
 	},
 	
 	createElement: function( element ) {
-
 		if ( this.svg_capable ) {
-			var svgElement = document.createElementNS("http://www.w3.org/2000/svg", element);
-			
+			var svgElement = document.svg2vmlcreateElementNS("http://www.w3.org/2000/svg", element);
 			if ( element == "rect" ) {
 				svgElement.applyGradient = function( gradient ) {
 					if ( gradient.type == "LinearGradient" ) {
 						var group = svgElement.parentNode;
 
 						if ( !document.getElementById(gradient.id ) ) {
-							var linearGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+							var linearGradient = document.svg2vmlcreateElementNS("http://www.w3.org/2000/svg", "linearGradient");
 							linearGradient.id = gradient.id;
 							
 							// the gradient angle is orthoganal to our base angle
@@ -109,18 +113,18 @@ VectorModel.prototype = {
 							linearGradient.setAttribute("x2", x2Pcnt + "%");
 							linearGradient.setAttribute("y2", y2Pcnt + "%");
 
-							var stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+							var stop1 = document.svg2vmlcreateElementNS("http://www.w3.org/2000/svg", "stop");
 							stop1.setAttribute('offset', "0%");
 							stop1.setAttribute('stop-color', gradient.endColor);
 							linearGradient.appendChild( stop1 );
 
-							var stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+							var stop2 = document.svg2vmlcreateElementNS("http://www.w3.org/2000/svg", "stop");
 							stop2.setAttribute('offset', "100%");
 							stop2.setAttribute('stop-color', gradient.startColor);
 							linearGradient.appendChild( stop2 );
 
 							if ( !group.defs ) {
-								group.appendChild( document.createElementNS("http://www.w3.org/2000/svg", "defs") );
+								group.appendChild( document.svg2vmlcreateElementNS("http://www.w3.org/2000/svg", "defs") );
 							}
 
 							group.getElementsByTagName("defs")[0].appendChild( linearGradient );
