@@ -4,10 +4,17 @@
 == 1.1: Complete basic functionality ==
   * Make gradient uniform for SVG and VML
 
+== 1.1.`*`: Bug fix versions ==
+  === 1.1.1: Several Issues Resolved (Due for release before end March 2010) ===
+    * Issue   5: Add IE 8 compatibility.
+    * Issue   3: Fix Non-display of any SVG in SVG capable browsers.
+    * Issue    : Stop all get(stroke-width) from returning stroke-color
+
 == 1.2: Complete basic functionality ==
   * Implement polyline
   * Implement gradients for circles and ellipses
 
-== 1.3: Extend basic functionality ==
+== Post 1.2: Extend basic functionality ==
   * Implement Path
   * Implement Matrix Transforms
+  * Attempt to implement as much of the SVG 1.1 DOM as possible in VML.
