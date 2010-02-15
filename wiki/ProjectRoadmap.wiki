@@ -18,3 +18,4 @@
   * Implement Path
   * Implement Matrix Transforms
   * Attempt to implement as much of the SVG 1.1 DOM as possible in VML.
+  * Add DOM parser to read embeded SVG and convert to VML.
