@@ -2,5 +2,5 @@
 <Module>
   <ModulePrefs title="SVG2VML Examples" scrolling="true" />
   <UserPref name="example" display_name="Example Page filename" required="true"/>
-  <Content type="url" href="http://svg2vml.googlecode.com/svn/branches/Wilko/__UP_example__"/>
+  <Content type="url" href="http://svg2vml.googlecode.com/svn/branches/Wilko/Examples/__UP_example__"/>
 </Module> 
