@@ -12,7 +12,8 @@
  * 
  * Author: Kyle Scholz      http://kylescholz.com/
  * Author: Lorien Henry-Wilkins
- * Copyright: 2006-2007
+ * Author: Ian Wilkinson
+ * Copyright: 2006-2010
  */
 
 var VectorModel = function() {
@@ -23,14 +24,16 @@ var linearGradients = new Object();
 
 VectorModel.prototype = {
 	init: function() {
-		this.svg_capable = document.implementation.hasFeature("org.w3c.dom.svg", '1.1');
+		//Should we care about the browser supporting SVG?
+		// If the developer doesn't check before using SVG why should we try to hold his hand? 
+		//this.svg_capable = document.implementation.hasFeature("org.w3c.dom.svg", '1.1');
+		this.svg_capable = document.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1")
 		this.vml_capable = (document.all && !(navigator.userAgent.indexOf("Opera")>=0)) ? true : false;
-		if (document.createElementNS){
+		if ((!document.svg2vmlcreateElementNS) && (document.createElementNS)){
 			document.svg2vmlcreateElementNS = document.createElementNS;
 		}
 		if ( this.vml_capable ) {
 			document.namespaces.add('v','urn:schemas-microsoft-com:vml');
-//			document.createStyleSheet().addRule("v\\:*", "behavior:url(#default#VML)");
 			document.createStyleSheet().addRule("v\\: *", "behavior:url(#default#VML); position:absolute" );
 			document.createStyleSheet().addRule("v\\:roundrect", "behavior:url(#default#VML); position:absolute" );
 			document.createStyleSheet().addRule("v\\:oval", "behavior:url(#default#VML); position:absolute" );
@@ -40,9 +43,7 @@ VectorModel.prototype = {
 			document.createStyleSheet().addRule("v\\:shape", "behavior:url(#default#VML); position:absolute" );
 			document.createStyleSheet().addRule("v\\:polyline", "behavior:url(#default#VML); position:absolute" );
 			document.createStyleSheet().addRule("v\\:stroke", "behavior:url(#default#VML); position:absolute" );
-		} else {
-			this.svg_capable =true;
-		}
+		} 
 		var me = this;
 		document.createElementNS = function( ns, element ) {
 			if (ns == "http://www.w3.org/2000/svg"){
@@ -163,7 +164,7 @@ VectorModel.prototype = {
 			}
 
 		} else {
-			// throw an exception? do HTML?
+			// throw an exception? do HTML? Don't worry...
 		}
 	}
 }
@@ -171,9 +172,18 @@ VectorModel.prototype = {
 var createVMLSurface = function() {
 //	var domElement = document.createElement("v:group");	
 	var domElement = document.createElement("div");
+/*
+//old 1.1 code
 	domElement.style.position = "absolute";
 	domElement.style.left = "0px";
-	domElement.style.top = "0px";
+	domElement.style.top = "0px";*/
+
+//New Code from pre 1.2
+	domElement.style.position = "relative";
+
+	domElement.baseInit = false;
+	domElement.baseX = 0;
+	domElement.baseY = 0;
 
 	domElement.setAttribute = function( key, value ) {
 		if ( key == "width" ) {
@@ -184,6 +194,10 @@ var createVMLSurface = function() {
 			this.style.left = value;
 		} else if ( key == "y" ) {
 			this.style.top = value;
+		} else if ( key == "viewBox" ) {
+			var parts = value.split(" ");
+			domElement.style.left = this.baseX + (parseInt(parts[2])+parseInt(parts[0]))+"px";
+			domElement.style.top = this.baseY + (parseInt(parts[3])+parseInt(parts[1]))+"px";
 		}
 	}
 	
@@ -819,13 +833,15 @@ LinGradient.prototype = {
 			this.id = value;
 			linearGradients[this.id] = this;
 		} else if( key == "x1" ) {
-			this.x1 = value.substring(0,value.length-1);
+			this.x1 = parseFloat(value); //.substring(0,value.length-1);
 		} else if( key == "y1" ) {
-			this.y1 = value.substring(0,value.length-1);
+			this.y1 = parseFloat(value); //.substring(0,value.length-1);
 		} else if( key == "x2" ) {
-			this.x2 = value.substring(0,value.length-1);
+			this.x2 = parseFloat(value); //.substring(0,value.length-1);
 		} else if( key == "y2" ) {
-			this.y2 = value.substring(0,value.length-1);
+			this.y2 = parseFloat(value); //.substring(0,value.length-1);
+		} else if( key == "gradientUnits") {
+			this.gradientUnits=value;
 		}
 	},
 	
