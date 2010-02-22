@@ -8,7 +8,7 @@
   === 1.1.1: Several Issues Resolved (Due for release before end March 2010) ===
     * Issue   5: Add IE 8 compatibility.
     * Issue   3: Fix Non-display of any SVG in SVG capable browsers.
-    * Issue    : Stop all get(stroke-width) from returning stroke-color
+    * Issue   6: Stop all get(stroke-width) from returning stroke-color
 
 == 1.2: Complete basic functionality ==
   * Implement polyline
