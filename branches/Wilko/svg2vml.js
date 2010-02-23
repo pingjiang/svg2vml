@@ -55,7 +55,12 @@ VectorModel.prototype = {
 	},
 	
 	createElement: function( element ) {
-		if ( this.svg_capable ) {
+		/* Changed from "this.svg_capable" to "!this.vml_capable" for two reasons:
+			1) to work around buggy Konqueror svg detection,
+			2) The web page svg js should work ok (with the exception of any svg2vml additions) without svg2vml being included.
+				On this basis, we are unable to enhance a VML browser, so don't try. 
+		*/
+		if ( !this.vml_capable ) {
 			var svgElement = document.svg2vmlcreateElementNS("http://www.w3.org/2000/svg", element);
 			if ( element == "rect" ) {
 				svgElement.applyGradient = function( gradient ) {
@@ -138,7 +143,7 @@ VectorModel.prototype = {
 			
 			return svgElement;		
 
-		} else if ( this.vml_capable ) {
+		} else if ( this.vml_capable ) {	//This could now simply be an "else"
 			if ( element == "svg" ) {
 				return createVMLSurface();
 			} else if ( element == "g" ) {
@@ -157,8 +162,10 @@ VectorModel.prototype = {
 				return createVMLStop();
 			} else if( element == "defs" ) {
 				return createVMLDefs();
-			} else if ( element == "polyline") {
-				return createVMLPolyline();
+			} else if ( element == "polyline") {	//Don't use this yet, it doesn't work correctly
+				return createVMLPoly(false);
+			} else if ( element == "polygon") {	//Don't use this yet, it doesn't work correctly
+				return createVMLPoly(true);
 			} else if ( element == "path") {
 				return createVMLPath();
 			}
@@ -237,19 +244,15 @@ var createVMLGroup = function() {
 				var child = this.childNodes[i];
                                 if (!child.originalWidth){
 					child.originalWidth=child.style.width;
-					child.originalheight=child.style.height;
-					child.originalleft=child.style.left;
-					child.originaltop=child.style.top;
-					//debug("orginals saved");
+					child.originalHeight=child.style.height;
+					child.originalLeft=child.style.left;
+					child.originalTop=child.style.top;
 				}
 				var width = parseInt(child.originalWidth);
-				var height = parseInt(child.originalheight);
-				var left = parseInt(child.originalleft);
-				var top = parseInt(child.originaltop);
-				/*var width = parseInt(child.style.width);
-				var height = parseInt(child.style.height);
-				var left = parseInt(child.style.left);
-				var top = parseInt(child.style.top);*/
+				var height = parseInt(child.originalHeight);
+				var left = parseInt(child.originalLeft);
+				var top = parseInt(child.originalTop);
+
 				child.style.width = width * xScale + 'px';
 				child.style.height = height * yScale + 'px';
 				child.style.left = (left ? left : 0) * xScale + 'px';
@@ -332,7 +335,7 @@ var createVMLCircle = function() {
 		} else if ( key == "stroke" ) {
 			return this.strokecolor;
 		} else if ( key == "stroke-width" ) {
-			return parseFloat( this.strokecolor ) * 1.2 + 'px';
+			return parseFloat( this.strokeweight ) * 1.2 + 'px';
 		} else if ( key == "fill" ) {
 			return this.fillcolor;
 		} else if ( key == "r" ) {
@@ -413,7 +416,7 @@ var createVMLEllipse = function() {
 		} else if ( key == "stroke" ) {
 			return this.strokecolor;
 		} else if ( key == "stroke-width" ) {
-			return parseFloat( this.strokecolor ) * 1.2 + 'px';
+			return parseFloat( this.strokeweight ) * 1.2 + 'px';
 		} else if ( key == "fill" ) {
 			return this.fillcolor;
 		} else if ( key == "rx" ) {
@@ -542,7 +545,7 @@ var createVMLRectangle = function() {
 		} else if ( key == "stroke" ) {
 			return this.strokecolor;
 		} else if ( key == "stroke-width" ) {
-			return parseFloat( this.strokecolor ) * 1.2 + 'px';
+			return parseFloat( this.strokeweight ) * 1.2 + 'px';
 		} else if ( key == "fill" ) {
 			return this.fillcolor;
 		} else if ( key == "width" ) {
@@ -609,7 +612,7 @@ var createVMLLine = function() {
 		} else if ( key == "stroke" ) {
 			return this.strokecolor;
 		} else if ( key == "stroke-width" ) {
-			return parseFloat( this.strokecolor ) * 1.2 + 'px';
+			return parseFloat( this.strokeweight ) * 1.2 + 'px';
 		} else if ( key == "fill" ) {
 			return this.fillcolor;
 		} else if ( key == "width" ) {
@@ -622,13 +625,14 @@ var createVMLLine = function() {
 	return domElement;
 };
 
-var createVMLPolyline = function() {
+var createVMLPoly = function( closeShape ) {
 	var domElement = document.createElement("v:polyline");
 	domElement.style.width = '21600';
 	domElement.style.height = '21600';
 	domElement.coordsize = '21600, 21600';
 	domElement.style.position = "absolute";
 	domElement.endcap="square";
+	domElement.closeShape = closeShape;
 	var domElementChild = document.createElement("v:stroke");
 	domElementChild.joinstyle="miter";
 	domElement.appendChild(domElementChild);
@@ -644,6 +648,12 @@ var createVMLPolyline = function() {
 
 	domElement.setAttribute = function( key, value ) {
 		if ( key == "points" ) {
+			if (this.closeShape){
+ 				var points =value.split(" ");
+ 				if (points[0] != points[points.length-1]){
+ 					value=value+ " " + points[0];
+ 				}
+ 			}
 			this.points = value; return;
 		} else if ( key == "stroke" ) {
 			this.strokecolor = value; return;
@@ -654,7 +664,6 @@ var createVMLPolyline = function() {
 			this.fillcolor = value ;
 			return;
 		} else if ( key == "transform" ) {
-			//var reg = /scale\s*\(\s*(\d+(\.\d+)?)(\s+(\d+(\.\d+)?))*\s*\)/i;
 			var reg = /scale\s*\(\s*([-+]?[0-9]*\.?[0-9]+)(\s+([-+]?[0-9]*\.?[0-9]+))?\s*\)/i;
 			var ar = reg.exec(value);
 			var xScale = 1;
@@ -663,25 +672,22 @@ var createVMLPolyline = function() {
 				xScale = ar[1];
 				yScale = (ar[2] ? ar[2] : ar[1]);
 			}
-			//for( var i=0; i<this.childNodes.length; i++ ){
 
-				var child = this; //.childNodes[i];
-				if (!this.originalWidth){
-					this.originalWidth=this.style.width;
-					this.originalheight=this.style.height;
-					this.originalleft=this.style.left;
-					this.originaltop=this.style.top;
-					debug("orginals saved");
-				}
-				var width = parseInt(child.originalWidth);
-				var height = parseInt(child.originalheight);
-				var left = parseInt(child.originalleft);
-				var top = parseInt(child.originaltop);
-				child.style.width = width * xScale + 'px';
-				child.style.height = height * yScale + 'px';
-				child.style.left = (left ? left : 0) * xScale + 'px';
-				child.style.top = (top ? top : 0) * yScale + 'px';
-			//}
+			if (!this.originalWidth){
+				this.originalWidth=this.style.width;
+				this.originalHeight=this.style.height;
+				this.originalLeft=this.style.left;
+				this.originalTop=this.style.top;
+			}
+			var width = parseInt(this.originalWidth);
+			var height = parseInt(this.originalHeight);
+			var left = parseInt(this.originalLeft);
+			var top = parseInt(this.originalTop);
+			this.style.width = width * xScale + 'px';
+			this.style.height = height * yScale + 'px';
+			this.style.left = (left ? left : 0) * xScale + 'px';
+			this.style.top = (top ? top : 0) * yScale + 'px';
+			
 		}
 	}
 	domElement.getAttribute = function( key ) {
@@ -690,7 +696,7 @@ var createVMLPolyline = function() {
 		} else if ( key == "stroke" ) {
 			return this.strokecolor;
 		} else if ( key == "stroke-width" ) {
-			return parseFloat( this.strokecolor ) / 1.2 + 'px';
+			return parseFloat( this.strokeweight ) / 1.2 + 'px';
 		} else if ( key == "fill" ) {
 			return (this.filled ? this.fillcolor : "none");
 		} else if ( key == "width" ) {
