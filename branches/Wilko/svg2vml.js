@@ -181,13 +181,12 @@ var createVMLSurface = function() {
 	var domElement = document.createElement("div");
 /*
 //old 1.1 code
-	domElement.style.position = "absolute";
+	domElement.style.position = "absolute";*/
 	domElement.style.left = "0px";
-	domElement.style.top = "0px";*/
+	domElement.style.top = "0px";
 
 //New Code from pre 1.2
 	domElement.style.position = "relative";
-
 	domElement.baseInit = false;
 	domElement.baseX = 0;
 	domElement.baseY = 0;
@@ -201,11 +200,11 @@ var createVMLSurface = function() {
 			this.style.left = value;
 		} else if ( key == "y" ) {
 			this.style.top = value;
-		} else if ( key == "viewBox" ) {
+		} /*else if ( key == "viewBox" ) {
 			var parts = value.split(" ");
 			domElement.style.left = this.baseX + (parseInt(parts[2])+parseInt(parts[0]))+"px";
 			domElement.style.top = this.baseY + (parseInt(parts[3])+parseInt(parts[1]))+"px";
-		}
+		}*/ //This 1.2 code doesn't seem to work...
 	}
 	
 	return domElement;
@@ -712,12 +711,41 @@ var createVMLPoly = function( closeShape ) {
 var createVMLPath = function() {
 
 	var domElement = document.createElement("v:shape");
-
 	domElement.style.width = '21600';
 	domElement.style.height = '21600';
 	domElement.coordsize = '21600, 21600';
 	domElement.style.position = "absolute";
-
+	
+	domElement.applyGradient = function( gradient ) {
+		if ( gradient.type == "LinearGradient" ) {
+			this.fillcolor = gradient.startColor;
+			var fill = document.createElement( "v:fill" );
+			fill.type = "gradient";
+			fill.color2 = gradient.endColor;
+			fill.angle = gradient.angle;
+			this.appendChild(fill);
+		}
+	}
+	
+	domElement.applyLinGradient = function( linGradient ) {
+		var stop1 = linGradient.stops[0];
+		var stop2 = linGradient.stops[linGradient.stops.length-1];
+		this.fillcolor = stop1.stopColor;
+		var fill = document.createElement( "v:fill" );
+		fill.type = "gradient";
+		fill.color2 = stop2.stopColor;
+		
+		if( linGradient.y1 == 0 ) {
+			var rads = Math.atan((linGradient.x2-linGradient.x1)/linGradient.y2);
+			var degs = rads * (180/Math.PI);
+			fill.angle = (degs + 180) % 360;
+		} else if( linGradient.y1 > 0 ) {
+			var rads = Math.atan((linGradient.y2-linGradient.y1)/linGradient.x2);
+			var degs = rads * (180/Math.PI);
+			fill.angle = (degs + 180) % 360;
+		}
+		this.appendChild(fill);
+	}
 	domElement.setAttribute = function( key, value ) {
 
 		if ( key == "d" ) {
@@ -739,13 +767,27 @@ var createVMLPath = function() {
 			for( var i=0; i<pathCommands.length; i++ ) {
 				var command = pathCommands[i].substring(0,1);
 				var params = pathCommands[i].substring(1,pathCommands[i].length);
+				params=params.split(/[, ]/);
+				for (var j=0; j<params.length; j++){
+					params[j]=Math.round(params[j]);
+				}
+				params=params.join();
 				switch( command ) {
 					case "M": // moveTo absolute
-						var coords = params.split(",");
+						var command="m";
+						var coords = params.split(/[, ]/);
 						cursorX = parseInt(coords[0]);
 						cursorY = parseInt(coords[1]);
 						break;
-
+					case "m": // moveTo relative
+						var command = "t"
+						var coords = params.split(/[, ]/);
+						coords[0] = parseInt(coords[0]) + parseInt(cursorX); 
+						coords[1] = parseInt(coords[1]) + parseInt(cursorY);
+						cursorX = parseInt(coords[0]);
+						cursorY = parseInt(coords[1]);
+						//params = coords[0] + "," + coords[1] + " ";
+						break;
 					case "A": // arc absolute:
 					// SVG: rx ry x-axis-rotation large-arc-flag sweep-flag x y
 					// VML: center (x,y) size(w,h) start-angle, end-angle
@@ -765,17 +807,30 @@ var createVMLPath = function() {
 
 //alert( command + params );
 						break;
-
+					case "L": // lineTo absolute
+						var command="l"
+						var coords = params.split(/[, ]+/);
+						cursorX = parseInt(coords[0]);
+						cursorY = parseInt(coords[1]);
+						break;
 					case "l": // lineTo relative
-						var coords = params.split(",");
+						var command="r"
+						var coords = params.split(/[, ]+/);
 						coords[0] = parseInt(coords[0]) + parseInt(cursorX); 
 						coords[1] = parseInt(coords[1]) + parseInt(cursorY);
 						cursorX = parseInt(coords[0]);
 						cursorY = parseInt(coords[1]);
-						params = coords[0] + "," + coords[1] + " ";
+						//params = coords[0] + "," + coords[1] + " ";
 						break;
+					case "c":
+						var command="v";
+						break;
+					case "z":
+						var command="xe";
+						var params="";
 
 					default:
+					command=command.toLowerCase();
 				}
 				newPath += command + params;					
 			}
@@ -789,7 +844,13 @@ var createVMLPath = function() {
 			this.strokeweight = parseFloat(value)/1.2 + "pt";
 			return;
 		} else if ( key == "fill" ) {
-			this.fillcolor = value;
+			if( value.substring(0,3) == "url" ) {
+				//get id
+				var gradId = value.substring(5,value.length-1);
+				this.applyLinGradient(linearGradients[gradId]);
+			} else {
+				this.fillcolor = value;
+			}
 			return;
 		}
 	}
