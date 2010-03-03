@@ -233,7 +233,7 @@ var createVMLGroup = function() {
 	domElement.setAttribute = function( key, value, cascade ) {
 		if (this.svg2vmlStyle[key]){
 			this.svg2vmlStyle[key]["value"]=value;
-			this.svg2vmlStyle[key]["valueSource"]=(cascade | "user");
+			this.svg2vmlStyle[key]["valueSource"]=(cascade || "user");
 			//TODO: Need to scan children and push properties down.
 		}
 		
@@ -295,7 +295,7 @@ var createVMLCircle = function() {
 	domElement.setAttribute = function( key, value, cascade ) {
 		if (this.svg2vmlStyle[key]){
 			this.svg2vmlStyle[key]["value"]=value;
-			this.svg2vmlStyle[key]["valueSource"]=(cascade | "user");
+			this.svg2vmlStyle[key]["valueSource"]=(cascade || "user");
 		}
 		if ( key == "cx" ) {
 			if( this.rVal == 0 ) {
@@ -389,7 +389,7 @@ var createVMLEllipse = function() {
 	domElement.setAttribute = function( key, value, cascade ) {
 		if (this.svg2vmlStyle[key]){
 			this.svg2vmlStyle[key]["value"]=value;
-			this.svg2vmlStyle[key]["valueSource"]=(cascade | "user");
+			this.svg2vmlStyle[key]["valueSource"]=(cascade || "user");
 		}
 
 		if ( key == "cx" ) {
@@ -536,7 +536,7 @@ var createVMLRectangle = function() {
 	domElement.setAttribute = function( key, value, cascade ) {
 		if (this.svg2vmlStyle[key]){
 			this.svg2vmlStyle[key]["value"]=value;
-			this.svg2vmlStyle[key]["valueSource"]=(cascade | "user");
+			this.svg2vmlStyle[key]["valueSource"]=(cascade || "user");
 		}
 
 		if ( key == "x" ) {
@@ -630,7 +630,7 @@ var createVMLLine = function() {
 	domElement.setAttribute = function( key, value, cascade ) {
 		if(this.svg2vmlStyle[key]){
 			this.svg2vmlStyle[key]["value"]=value;
-			this.svg2vmlStyle[key]["valueSource"]=(cascade | "user");
+			this.svg2vmlStyle[key]["valueSource"]=(cascade || "user");
 		}
 		if ( key == "x1" ) {
 			this.x1 = value;
@@ -728,7 +728,7 @@ var createVMLPoly = function( closeShape ) {
 	domElement.setAttribute = function( key, value, cascade ) {
 		if (this.svg2vmlStyle[key]){
 			this.svg2vmlStyle[key]["value"]=value;
-			this.svg2vmlStyle[key]["valueSource"]=(cascade | "user");
+			this.svg2vmlStyle[key]["valueSource"]=(cascade || "user");
 		}
 		if ( key == "points" ) {
 			if (this.closeShape){
@@ -847,7 +847,7 @@ var createVMLPath = function() {
 	domElement.setAttribute = function( key, value, cascade ) {
 		if (this.svg2vmlStyle[key]){
 			this.svg2vmlStyle[key]["value"]=value;
-			this.svg2vmlStyle[key]["valueSource"]=(cascade | "user");
+			this.svg2vmlStyle[key]["valueSource"]=(cascade || "user");
 		}
 
 		if ( key == "d" ) {
