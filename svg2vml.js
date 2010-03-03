@@ -218,8 +218,25 @@ var createVMLGroup = function() {
 	domElement.style.top = "0px";
 
 	domElement.defs = {};
-
-	domElement.setAttribute = function( key, value ) {
+	domElement.svg2vmlStyle ={fill:{value:"#000000", valueSource:"default"},stroke:{value:"none", valueSource:"default"},"stroke-width":{value:"1", valueSource:"default"}};
+	domElement.svg2vmlAppendChild=domElement.appendChild;
+	domElement.appendChild = function(childElement){
+		if(childElement.svg2vmlStyle){
+			for(var key in this.svg2vmlStyle){
+				if ((this.svg2vmlStyle[key]["value"]) && (childElement.svg2vmlStyle[key]) && (childElement.svg2vmlStyle[key]["valueSource"]!="user")) {
+					childElement.setAttribute(key, this.svg2vmlStyle[key]["value"], "inherited");
+				}
+			}
+		}
+		this.svg2vmlAppendChild(childElement);
+	}
+	domElement.setAttribute = function( key, value, cascade ) {
+		if (this.svg2vmlStyle[key]){
+			this.svg2vmlStyle[key]["value"]=value;
+			this.svg2vmlStyle[key]["valueSource"]=(cascade | "user");
+			//TODO: Need to scan children and push properties down.
+		}
+		
 		if ( key == "width" ) {
 			this.style.width = value;
 		} else if ( key == "height" ) {
@@ -259,7 +276,12 @@ var createVMLGroup = function() {
 			}
 		}
 	}
-	
+	//Set default SVG properties
+	for(var key in domElement.svg2vmlStyle){
+		if((domElement.svg2vmlStyle[key]["value"]) && (domElement.svg2vmlStyle[key]["valueSource"]=="default")){
+			domElement.setAttribute(key, domElement.svg2vmlStyle[key]["value"], "default");
+		}
+	}
 	return domElement;
 };
 
@@ -268,9 +290,13 @@ var createVMLCircle = function() {
 	domElement.leftPos = 0;
 	domElement.topPos = 0;
 	domElement.rVal = 0;
+	domElement.svg2vmlStyle ={fill:{value:"#000000", valueSource:"default"},stroke:{value:"none", valueSource:"default"},"stroke-width":{value:"1", valueSource:"default"}};
 	
-	domElement.setAttribute = function( key, value ) {
-
+	domElement.setAttribute = function( key, value, cascade ) {
+		if (this.svg2vmlStyle[key]){
+			this.svg2vmlStyle[key]["value"]=value;
+			this.svg2vmlStyle[key]["valueSource"]=(cascade | "user");
+		}
 		if ( key == "cx" ) {
 			if( this.rVal == 0 ) {
 				this.leftPos = parseInt(value);
@@ -286,10 +312,12 @@ var createVMLCircle = function() {
 				this.style.top = this.topPos;
 			}
 		} else if ( key == "stroke" ) {
+			this.stroked=(value == "none" ? 0 : 1);
 			this.strokecolor = value;
 		} else if ( key == "stroke-width" ) {
 			this.strokeweight = parseFloat(value)/1.2 + "pt";
 		} else if ( key == "fill" ) {
+			this.filled=(value == "none" ? 0 : 1);
 			this.fillcolor = value;
 		} else if ( key == "r" ) {
 			//save the last width
@@ -332,16 +360,21 @@ var createVMLCircle = function() {
 				(parseInt(this.style.top) + parseInt(this.style.height)/2) + 'px' : 0 + 'px'; 
 			return y;
 		} else if ( key == "stroke" ) {
-			return this.strokecolor;
+			return (this.stroked ? this.strokecolor : "none");
 		} else if ( key == "stroke-width" ) {
 			return parseFloat( this.strokeweight ) * 1.2 + 'px';
 		} else if ( key == "fill" ) {
-			return this.fillcolor;
+			return (this.filled ? this.fillcolor : "none");
 		} else if ( key == "r" ) {
 			return parseInt( this.style.width )/2;
 		}
 	}
-	
+	//Set default SVG properties
+	for(var key in domElement.svg2vmlStyle){
+		if((domElement.svg2vmlStyle[key]["value"]) && (domElement.svg2vmlStyle[key]["valueSource"]=="default")){
+			domElement.setAttribute(key, domElement.svg2vmlStyle[key]["value"], "default");
+		}
+	}
 	return domElement;
 };
 
@@ -351,7 +384,13 @@ var createVMLEllipse = function() {
 	domElement.topPos = 0;
 	domElement.rxVal = 0;
 	domElement.ryVal = 0;
-	domElement.setAttribute = function( key, value ) {
+	domElement.svg2vmlStyle ={fill:{value:"#000000", valueSource:"default"},stroke:{value:"none", valueSource:"default"},"stroke-width":{value:"1", valueSource:"default"}};
+	
+	domElement.setAttribute = function( key, value, cascade ) {
+		if (this.svg2vmlStyle[key]){
+			this.svg2vmlStyle[key]["value"]=value;
+			this.svg2vmlStyle[key]["valueSource"]=(cascade | "user");
+		}
 
 		if ( key == "cx" ) {
 			if( this.rxVal == 0 ) {
@@ -368,10 +407,12 @@ var createVMLEllipse = function() {
 				this.style.top = this.topPos;
 			}
 		} else if ( key == "stroke" ) {
+			this.stroked=(value == "none" ? 0 : 1);
 			this.strokecolor = value;
 		} else if ( key == "stroke-width" ) {
 			this.strokeweight = parseFloat(value)/1.2 + "pt";
 		} else if ( key == "fill" ) {
+			this.filled=(value == "none" ? 0 : 1);
 			this.fillcolor = value;
 		} else if ( key == "rx" ) {
 			this.rxVal = parseInt(value);
@@ -413,18 +454,23 @@ var createVMLEllipse = function() {
 				(parseInt(this.style.top) + parseInt(this.style.height)/2) + 'px' : 0 + 'px'; 
 			return y;
 		} else if ( key == "stroke" ) {
-			return this.strokecolor;
+			return (this.stroked ? this.strokecolor : "none");
 		} else if ( key == "stroke-width" ) {
 			return parseFloat( this.strokeweight ) * 1.2 + 'px';
 		} else if ( key == "fill" ) {
-			return this.fillcolor;
+			return (this.filled ? this.fillcolor : "none");
 		} else if ( key == "rx" ) {
 			return parseInt( this.style.width )/2;
 		} else if ( key == "ry" ) {
 			return parseInt( this.style.height )/2;
 		}
 	}
-	
+	//Set default SVG properties
+	for(var key in domElement.svg2vmlStyle){
+		if((domElement.svg2vmlStyle[key]["value"]) && (domElement.svg2vmlStyle[key]["valueSource"]=="default")){
+			domElement.setAttribute(key, domElement.svg2vmlStyle[key]["value"], "default");
+		}
+	}	
 	return domElement;
 };
 
@@ -446,6 +492,7 @@ var createVMLRectangle = function() {
 	var domElement = document.createElement("v:roundrect");
 	
 	domElement.rxy = 0;
+	domElement.svg2vmlStyle ={fill:{value:"#000000", valueSource:"default"},stroke:{value:"none", valueSource:"default"},"stroke-width":{value:"1", valueSource:"default"}};
 	
 	domElement.applyGradient = function( gradient ) {
 		if ( gradient.type == "LinearGradient" ) {
@@ -461,12 +508,16 @@ var createVMLRectangle = function() {
 	domElement.applyLinGradient = function( linGradient ) {
 		var stop1 = linGradient.stops[0];
 		var stop2 = linGradient.stops[linGradient.stops.length-1];
-		this.fillcolor = stop1.stopColor;
+		
 		var fill = document.createElement( "v:fill" );
 		fill.type = "gradient";
+		fill.color = stop1.stopColor;
 		fill.color2 = stop2.stopColor;
-		
-		if( linGradient.y1 == 0 ) {
+		for(var x=1;x<linGradient.stops.length-1;x++) {
+			fill.colors=(fill.colors ? fill.colors+ ", " : "")+linGradient.stops[x].offset+" "+linGradient.stops[x].stopColor;
+		}
+		//alert(fill.colors);
+		/*if( linGradient.y1 == 0 ) {
 			var rads = Math.atan((linGradient.x2-linGradient.x1)/linGradient.y2);
 			var degs = rads * (180/Math.PI);
 			fill.angle = (degs + 180) % 360;
@@ -474,11 +525,19 @@ var createVMLRectangle = function() {
 			var rads = Math.atan((linGradient.y2-linGradient.y1)/linGradient.x2);
 			var degs = rads * (180/Math.PI);
 			fill.angle = (degs + 180) % 360;
-		}
+		}*/
+		var rads = Math.atan((linGradient.y2-linGradient.y1)/(linGradient.x2-linGradient.x1));
+		var degs = rads * (180/Math.PI);
+		fill.angle = (degs + 90) % 360;
 		this.appendChild(fill);
 	}
 
-	domElement.setAttribute = function( key, value ) {
+	
+	domElement.setAttribute = function( key, value, cascade ) {
+		if (this.svg2vmlStyle[key]){
+			this.svg2vmlStyle[key]["value"]=value;
+			this.svg2vmlStyle[key]["valueSource"]=(cascade | "user");
+		}
 
 		if ( key == "x" ) {
 			this.style.left = parseInt(value) + 'px';
@@ -487,6 +546,7 @@ var createVMLRectangle = function() {
 			this.style.top = parseInt(value) + 'px';
 			return;
 		} else if ( key == "stroke" ) {
+			this.stroked=(value == "none" ? 0 : 1);
 			this.strokecolor = value;
 			return;
 		} else if ( key == "stroke-width" ) {
@@ -498,6 +558,7 @@ var createVMLRectangle = function() {
 				var gradId = value.substring(5,value.length-1);
 				this.applyLinGradient(linearGradients[gradId]);
 			} else {
+				this.filled=(value == "none" ? 0 : 1);
 				this.fillcolor = value;
 			}
 			return;
@@ -542,26 +603,35 @@ var createVMLRectangle = function() {
 			var y = parseInt(this.style.top) ?	parseInt(this.style.top) + 'px' : 0 + 'px'; 
 			return y;
 		} else if ( key == "stroke" ) {
-			return this.strokecolor;
+			return (this.stroked ? this.strokecolor : "none");
 		} else if ( key == "stroke-width" ) {
 			return parseFloat( this.strokeweight ) * 1.2 + 'px';
 		} else if ( key == "fill" ) {
-			return this.fillcolor;
+			return (this.filled ? this.fillcolor : "none");
 		} else if ( key == "width" ) {
 			return parseInt( this.style.width );
 		} else if ( key == "height" ) {
 			return parseInt( this.style.height );
 		}
 	}
-	
+	//Set default SVG properties
+	for(var key in domElement.svg2vmlStyle){
+		if((domElement.svg2vmlStyle[key]["value"]) && (domElement.svg2vmlStyle[key]["valueSource"]=="default")){
+			domElement.setAttribute(key, domElement.svg2vmlStyle[key]["value"], "default");
+		}
+	}	
 	return domElement;
 };
 
 var createVMLLine = function() {
 	var domElement = document.createElement("v:line");
+	domElement.svg2vmlStyle ={fill:{value:"#000000", valueSource:"default"},stroke:{value:"none", valueSource:"default"},"stroke-width":{value:"1", valueSource:"default"}};
 	
-	domElement.setAttribute = function( key, value ) {
-
+	domElement.setAttribute = function( key, value, cascade ) {
+		if(this.svg2vmlStyle[key]){
+			this.svg2vmlStyle[key]["value"]=value;
+			this.svg2vmlStyle[key]["valueSource"]=(cascade | "user");
+		}
 		if ( key == "x1" ) {
 			this.x1 = value;
 			this.y1 = this.y1 ? this.y1 : 0;
@@ -583,12 +653,14 @@ var createVMLLine = function() {
 			this.to = this.x2 + ' ' + this.y2;
 			return;
 		} else if ( key == "stroke" ) {
+			this.stroked=(value == "none" ? 0 : 1);
 			this.strokecolor = value;
 			return;
 		} else if ( key == "stroke-width" ) {
 			this.strokeweight = parseFloat(value)/1.2 + "pt";
 			return;
 		} else if ( key == "fill" ) {
+			this.filled=(value == "none" ? 0 : 1);
 			this.fillcolor = value;
 			return;
 		}
@@ -609,18 +681,23 @@ var createVMLLine = function() {
 			if ( !this.y2 ) { return 0; }
 			return y2;
 		} else if ( key == "stroke" ) {
-			return this.strokecolor;
+			return (this.stroked ? this.strokecolor : "none");
 		} else if ( key == "stroke-width" ) {
 			return parseFloat( this.strokeweight ) * 1.2 + 'px';
 		} else if ( key == "fill" ) {
-			return this.fillcolor;
+			return (this.filled ? this.fillcolor : "none");
 		} else if ( key == "width" ) {
 			return parseInt( this.style.width );
 		} else if ( key == "height" ) {
 			return parseInt( this.style.height );
 		}
 	}
-	
+	//Set default SVG properties
+	for(var key in domElement.svg2vmlStyle){
+		if((domElement.svg2vmlStyle[key]["value"]) && (domElement.svg2vmlStyle[key]["valueSource"]=="default")){
+			domElement.setAttribute(key, domElement.svg2vmlStyle[key]["value"], "default");
+		}
+	}
 	return domElement;
 };
 
@@ -632,10 +709,12 @@ var createVMLPoly = function( closeShape ) {
 	domElement.style.position = "absolute";
 	domElement.endcap="square";
 	domElement.closeShape = closeShape;
+	domElement.svg2vmlStyle ={fill:{value:"#000000", valueSource:"default"},stroke:{value:"none", valueSource:"default"},"stroke-width":{value:"1", valueSource:"default"}};
+
 	var domElementChild = document.createElement("v:stroke");
 	domElementChild.joinstyle="miter";
 	domElement.appendChild(domElementChild);
-
+	
 	domElement.getBBox = function () {
 		return {
 			x: this.style.left,
@@ -645,7 +724,12 @@ var createVMLPoly = function( closeShape ) {
 		};
 	}
 
-	domElement.setAttribute = function( key, value ) {
+		
+	domElement.setAttribute = function( key, value, cascade ) {
+		if (this.svg2vmlStyle[key]){
+			this.svg2vmlStyle[key]["value"]=value;
+			this.svg2vmlStyle[key]["valueSource"]=(cascade | "user");
+		}
 		if ( key == "points" ) {
 			if (this.closeShape){
  				var points =value.split(" ");
@@ -655,6 +739,7 @@ var createVMLPoly = function( closeShape ) {
  			}
 			this.points = value; return;
 		} else if ( key == "stroke" ) {
+			this.stroked=(value == "none" ? 0 : 1);
 			this.strokecolor = value; return;
 		} else if ( key == "stroke-width" ) {
 			this.strokeweight = parseFloat(value)/1.2 + "pt"; return;
@@ -693,7 +778,7 @@ var createVMLPoly = function( closeShape ) {
 		if ( key == "points" ) {
 			if ( !this.points ) { return 0; } return points;
 		} else if ( key == "stroke" ) {
-			return this.strokecolor;
+			return (this.stroked ? this.strokecolor : "none");
 		} else if ( key == "stroke-width" ) {
 			return parseFloat( this.strokeweight ) / 1.2 + 'px';
 		} else if ( key == "fill" ) {
@@ -704,7 +789,12 @@ var createVMLPoly = function( closeShape ) {
 			return parseInt( this.style.height );
 		}
 	}
-
+	//Set default SVG properties
+	for(var key in domElement.svg2vmlStyle){
+		if((domElement.svg2vmlStyle[key]["value"]) && (domElement.svg2vmlStyle[key]["valueSource"]=="default")){
+			domElement.setAttribute(key, domElement.svg2vmlStyle[key]["value"], "default");
+		}
+	}
 	return domElement;
 }
 
@@ -715,6 +805,7 @@ var createVMLPath = function() {
 	domElement.style.height = '21600';
 	domElement.coordsize = '21600, 21600';
 	domElement.style.position = "absolute";
+	domElement.svg2vmlStyle ={fill:{value:"#000000", valueSource:"default"},stroke:{value:"none", valueSource:"default"},"stroke-width":{value:"1", valueSource:"default"}};
 	
 	domElement.applyGradient = function( gradient ) {
 		if ( gradient.type == "LinearGradient" ) {
@@ -730,12 +821,15 @@ var createVMLPath = function() {
 	domElement.applyLinGradient = function( linGradient ) {
 		var stop1 = linGradient.stops[0];
 		var stop2 = linGradient.stops[linGradient.stops.length-1];
-		this.fillcolor = stop1.stopColor;
 		var fill = document.createElement( "v:fill" );
 		fill.type = "gradient";
+		fill.color = stop1.stopColor;
 		fill.color2 = stop2.stopColor;
-		
-		if( linGradient.y1 == 0 ) {
+		for(var x=1;x<linGradient.stops.length-1;x++) {
+			fill.colors=(fill.colors ? fill.colors+ ", " : "")+linGradient.stops[x].offset+" "+linGradient.stops[x].stopColor;
+		}
+		//alert(fill.colors);
+		/*if( linGradient.y1 == 0 ) {
 			var rads = Math.atan((linGradient.x2-linGradient.x1)/linGradient.y2);
 			var degs = rads * (180/Math.PI);
 			fill.angle = (degs + 180) % 360;
@@ -743,10 +837,18 @@ var createVMLPath = function() {
 			var rads = Math.atan((linGradient.y2-linGradient.y1)/linGradient.x2);
 			var degs = rads * (180/Math.PI);
 			fill.angle = (degs + 180) % 360;
-		}
+		}*/
+		var rads = Math.atan((linGradient.y2-linGradient.y1)/(linGradient.x2-linGradient.x1));
+		var degs = rads * (180/Math.PI);
+		fill.angle = (degs + 90) % 360;
 		this.appendChild(fill);
 	}
-	domElement.setAttribute = function( key, value ) {
+	
+	domElement.setAttribute = function( key, value, cascade ) {
+		if (this.svg2vmlStyle[key]){
+			this.svg2vmlStyle[key]["value"]=value;
+			this.svg2vmlStyle[key]["valueSource"]=(cascade | "user");
+		}
 
 		if ( key == "d" ) {
 
@@ -838,6 +940,7 @@ var createVMLPath = function() {
 			this.path = newPath;
 			return;
 		} else if ( key == "stroke" ) {
+			this.stroked=(value == "none" ? 0 : 1);
 			this.strokecolor = value;
 			return;
 		} else if ( key == "stroke-width" ) {
@@ -849,6 +952,7 @@ var createVMLPath = function() {
 				var gradId = value.substring(5,value.length-1);
 				this.applyLinGradient(linearGradients[gradId]);
 			} else {
+				this.filled=(value == "none" ? 0 : 1);
 				this.fillcolor = value;
 			}
 			return;
@@ -858,7 +962,12 @@ var createVMLPath = function() {
 	domElement.getAttribute = function( key ) {
 		alert("not implemented");
 	}
-	
+	//Set default SVG properties
+	for(var key in domElement.svg2vmlStyle){
+		if((domElement.svg2vmlStyle[key]["value"]) && (domElement.svg2vmlStyle[key]["valueSource"]=="default")){
+			domElement.setAttribute(key, domElement.svg2vmlStyle[key]["value"], "default");
+		}
+	}	
 	return domElement;
 };
 
@@ -871,6 +980,9 @@ var createVMLStop = function() {
 	
 	myStop.setAttribute = function( key, value ) {
 		if( key == 'offset' ) {
+			if (value<=1) {
+				value=Math.round(value*100)+"%";
+			}
 			this.offset = value;
 		} else if( key == 'stop-color' ) {
 			this.stopColor = value;
