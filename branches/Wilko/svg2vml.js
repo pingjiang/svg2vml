@@ -52,6 +52,7 @@ VectorModel.prototype = {
 				return document.svg2vmlcreateElementNS(ns, element);
 			}
 		}
+		window.createElementNS=document.createElementNS;
 	},
 	
 	createElement: function( element ) {
