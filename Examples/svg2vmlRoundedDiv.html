@@ -1,0 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Untitled Document</title>
+		<script src="../svg2vml.js"></script>
+			
+		<script>
+			function go() {
+				var vectorModel = new VectorModel();
+				var container = document.getElementById("content");
+				
+				var mySvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+				container.appendChild(mySvg);
+				mySvg.setAttribute("version", "1.1");
+				var myG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+				mySvg.appendChild(myG);
+				
+				var divHeight = document.getElementById("photo").offsetHeight;
+				var myRoundRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+				myRoundRect.setAttribute("x", 2);
+				myRoundRect.setAttribute("y", 2);
+				myRoundRect.setAttribute("width", "200px");
+				myRoundRect.setAttribute("height", divHeight + "px");
+				myRoundRect.setAttribute("stroke","#aa0088");
+				myRoundRect.setAttribute("stroke-width", "4px");
+				myRoundRect.setAttribute("rx", "5");
+				myRoundRect.setAttribute("ry", "5");
+				myG.appendChild(myRoundRect);
+				var linearGrad = new LinearGradient("myGrad", "#ff99cc", "#FFFFFF", 90);
+				myRoundRect.applyGradient(linearGrad);
+			}
+		</script>
+	</head>
+	<body onload="go()">
+		<div id="content" style="width:500px; height:500px; position:relative;">
+			<div id="photo" style="font-family:arial; font-size:11pt; width:200px; position:absolute; z-index:1; padding:10px;">
+				<b>Here is some content</b><br>
+				blah blah blah<br>
+				blah blah blah<br>
+				blah blah blah<br>
+				blah blah blah<br>
+				blah blah blah<br>
+				blah blah blah<br>
+				blah blah blah<br>
+				blah blah blah<br>
+			</div>
+		</div>
+	</body>
+</html>

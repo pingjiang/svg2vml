@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Untitled Document</title>
+		<script src="../svg2vml.js"></script>
+		
+		<script>
+			function debug(msg) {
+				document.getElementById("debug").innerHTML += msg + "<br>";
+			}
+			
+			function go() {
+				var vectorModel = new VectorModel();
+				var container = document.getElementById("content");
+				var mySvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+				container.appendChild(mySvg);
+				mySvg.setAttribute("version", "1.1");
+				var myG = document.createElementNS("http://www.w3.org/2000/svg", "g");
+				mySvg.appendChild(myG);
+				
+				var myLine = document.createElementNS("http://www.w3.org/2000/svg", "line");
+				myLine.setAttribute("x1", "5px");
+				myLine.setAttribute("y1", "5px");
+				myLine.setAttribute("x2", "100px");
+				myLine.setAttribute("y2", "100px");
+				myLine.setAttribute("stroke", "#FF0000");
+				myLine.setAttribute("stroke-width", "3");
+				myG.appendChild(myLine);
+				
+				var myRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+				myRect.setAttribute("x", 130);
+				myRect.setAttribute("y", 5);
+				myRect.setAttribute("width", "100px");
+				myRect.setAttribute("height", "100px");
+				myRect.setAttribute("stroke","#3399ff");
+				myRect.setAttribute("stroke-width", "4px");
+				myRect.setAttribute("fill", "#FFFFFF");
+				myG.appendChild(myRect);
+				
+				var myLine2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+				myLine2.setAttribute("x1", "133px");
+				myLine2.setAttribute("y1", "8px");
+				myLine2.setAttribute("x2", "227px");
+				myLine2.setAttribute("y2", "101px");
+				myLine2.setAttribute("stroke", "#FF0000");
+				myLine2.setAttribute("stroke-width", "3");
+				myG.appendChild(myLine2);
+				
+			}
+		</script>
+	</head>
+	<body onload="go();">
+		<div id="content"></div>
+		<div id="debug" style="position:absolute; top:250px;"></div>
+	</body>
+</html>
