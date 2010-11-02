@@ -1,0 +1,145 @@
+#summary Current Status
+#labels Featured
+
+The following is a list of SVG element types and how well supported they are in svg2vml.  If no support is listed, assume that svg2vml doesn't yet support that element at all.
+
+    * a
+    * altGlyph
+    * altGlyphDef
+    * altGlyphItem
+    * animate
+    * animateColor
+    * animateMotion
+    * animateTransform
+    * circle - partial support
+    * clipPath
+    * color-profile
+    * cursor
+    * definition-src
+    * defs
+    * desc
+    * ellipse - partial support
+    * feBlend
+    * feColorMatrix
+    * feComponentTransfer
+    * feComposite
+    * feConvolveMatrix
+    * feDiffuseLighting
+    * feDisplacementMap
+    * feDistantLight
+    * feFlood
+    * feFuncA
+    * feFuncB
+    * feFuncG
+    * feFuncR
+    * feGaussianBlur
+    * feImage
+    * feMerge
+    * feMergeNode
+    * feMorphology
+    * feOffset
+    * fePointLight
+    * feSpecularLighting
+    * feSpotLight
+    * feTile
+    * feTurbulence
+    * filter
+    * font
+    * font-face
+    * font-face-format
+    * font-face-name
+    * font-face-src
+    * font-face-uri
+    * foreignObject
+    * g - partial support
+    * glyph
+    * glyphRef
+    * hkern
+    * image
+    * line - partial support
+    * linearGradient - partial support
+    * marker
+    * mask
+    * metadata
+    * missing-glyph
+    * mpath
+    * path - partial support
+    * pattern
+    * polygon - partial support
+    * polyline - partial support
+    * radialGradient
+    * rect - partial support
+    * script
+    * set
+    * stop - partial support
+    * style
+    * svg - partial support
+    * switch
+    * symbol
+    * text
+    * textPath
+    * title
+    * tref
+    * tspan
+    * use
+    * view
+    * vkern
+
+The following is a list of the SVG 1.1 features.  This list will be updated with information when we have assertained that we fully support one or more of the items below.
+http://www.w3.org/TR/SVG11/feature#SVG
+http://www.w3.org/TR/SVG11/feature#SVGDOM
+http://www.w3.org/TR/SVG11/feature#SVG-static
+http://www.w3.org/TR/SVG11/feature#SVGDOM-static
+http://www.w3.org/TR/SVG11/feature#SVG-animation
+http://www.w3.org/TR/SVG11/feature#SVGDOM-animation
+http://www.w3.org/TR/SVG11/feature#SVG-dynamic
+http://www.w3.org/TR/SVG11/feature#SVGDOM-dynamic
+http://www.w3.org/TR/SVG11/feature#CoreAttribute
+http://www.w3.org/TR/SVG11/feature#Structure
+http://www.w3.org/TR/SVG11/feature#BasicStructure
+http://www.w3.org/TR/SVG11/feature#ContainerAttribute
+http://www.w3.org/TR/SVG11/feature#ConditionalProcessing
+http://www.w3.org/TR/SVG11/feature#Image
+http://www.w3.org/TR/SVG11/feature#Style
+http://www.w3.org/TR/SVG11/feature#ViewportAttribute
+http://www.w3.org/TR/SVG11/feature#Shape
+http://www.w3.org/TR/SVG11/feature#Text
+http://www.w3.org/TR/SVG11/feature#BasicText
+http://www.w3.org/TR/SVG11/feature#PaintAttribute
+http://www.w3.org/TR/SVG11/feature#BasicPaintAttribute
+http://www.w3.org/TR/SVG11/feature#OpacityAttribute
+http://www.w3.org/TR/SVG11/feature#GraphicsAttribute
+http://www.w3.org/TR/SVG11/feature#BasicGraphicsAttribute
+http://www.w3.org/TR/SVG11/feature#Marker
+http://www.w3.org/TR/SVG11/feature#ColorProfile
+http://www.w3.org/TR/SVG11/feature#Gradient
+http://www.w3.org/TR/SVG11/feature#Pattern
+http://www.w3.org/TR/SVG11/feature#Clip
+http://www.w3.org/TR/SVG11/feature#BasicClip
+http://www.w3.org/TR/SVG11/feature#Mask
+http://www.w3.org/TR/SVG11/feature#Filter
+http://www.w3.org/TR/SVG11/feature#BasicFilter
+http://www.w3.org/TR/SVG11/feature#DocumentEventsAttribute
+http://www.w3.org/TR/SVG11/feature#GraphicalEventsAttribute
+http://www.w3.org/TR/SVG11/feature#AnimationEventsAttribute
+http://www.w3.org/TR/SVG11/feature#Cursor
+http://www.w3.org/TR/SVG11/feature#Hyperlinking
+http://www.w3.org/TR/SVG11/feature#XlinkAttribute
+http://www.w3.org/TR/SVG11/feature#ExternalResourcesRequired
+http://www.w3.org/TR/SVG11/feature#View
+http://www.w3.org/TR/SVG11/feature#Script
+http://www.w3.org/TR/SVG11/feature#Animation
+http://www.w3.org/TR/SVG11/feature#Font
+http://www.w3.org/TR/SVG11/feature#BasicFont
+http://www.w3.org/TR/SVG11/feature#Extensibility
+org.w3c.svg
+org.w3c.svg.static
+org.w3c.svg.animation
+org.w3c.svg.dynamic
+org.w3c.dom.svg
+org.w3c.dom.svg.static
+org.w3c.dom.svg.animation
+org.w3c.dom.svg.dynamic
+org.w3c.svg.all
+org.w3c.dom.svg.all
+
