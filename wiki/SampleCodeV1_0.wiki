@@ -1,5 +1,4 @@
 #summary Sample Code
-#labels Featured
 
 Here is an example that demonstrates creating a rectangle, ellipse, and circle using the common SVG2VML API. This provides a simple interface for applying a gradient to a rectangle.
 http://jsviz.org/files/svg2vml/svg2vmlExample1.html.
