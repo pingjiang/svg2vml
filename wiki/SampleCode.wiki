@@ -17,11 +17,12 @@ There should be no modification required to standards compliant code as the norm
 
 You may need to verify if your code is using the correct methods to create and use objects.  Some browsers allow the use of "document.createElement" to create SVG objects, when instead you should be using "document.createElementNS" and pass in the correct "http://www.w3.org/2000/svg" Namespace.
 
-The following are a few simple examples of the SVG DOM, with svg2vml translating for VML only Browsers.<br>
-A HTML DIV element with rounded corners by using a SVG - [ExampleRoundedDiv Example]. <br>
-A selection of SVG shapes with gradients - [ExampleShapesWithGradients Example].<br>
-SVG line elements - [ExampleLineElement Example].<br>
-A version of the original SVG logo created by Harvey Rayner - [ExampleSVGLogo Example].<br>
+The following are a few simple examples of the SVG DOM, with svg2vml translating for VML only Browsers.
+  * A HTML DIV element with rounded corners by using a SVG - [ExampleRoundedDiv Example].
+  * A selection of SVG shapes with gradients - [ExampleShapesWithGradients Example].
+  * SVG line elements - [ExampleLineElement Example].
+  * A version of the original SVG logo created by Harvey Rayner - [ExampleSVGLogo Example].
+
 
 
 ===Existing users ===
