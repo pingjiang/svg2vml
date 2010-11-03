@@ -3,7 +3,9 @@
 
 The following is a list of SVG element types and how well supported they are in svg2vml.  If no support is listed, assume that svg2vml doesn't yet support that element at all.
 <font color="#DD0000">
-<font color="#349a34">    * a - Native Support from browser (unless a specific case is provided) </font>
+<font color="#349a34">
+    * a - Native Support from browser (unless a specific case is provided)
+</font>
     * altGlyph
     * altGlyphDef
     * altGlyphItem
@@ -11,14 +13,18 @@ The following is a list of SVG element types and how well supported they are in 
     * animateColor
     * animateMotion
     * animateTransform
-<font color="#DD6600">    * circle - partial support</font>
+<font color="#DD6600">
+    * circle - partial support
+</font>
     * clipPath
     * color-profile
     * cursor
     * definition-src
     * defs
     * desc
-<font color="#DD6600">    * ellipse - partial support</font>
+<font color="#DD6600">
+    * ellipse - partial support
+</font>
     * feBlend
     * feColorMatrix
     * feComponentTransfer
@@ -51,29 +57,43 @@ The following is a list of SVG element types and how well supported they are in 
     * font-face-src
     * font-face-uri
     * foreignObject
-<font color="#DD6600">    * g - partial support</font>
+<font color="#DD6600">
+    * g - partial support
+</font>
     * glyph
     * glyphRef
     * hkern
     * image
-<font color="#DD6600">    * line - partial support
-    * linearGradient - partial support</font>
+<font color="#DD6600">
+    * line - partial support
+    * linearGradient - partial support
+</font>
     * marker
     * mask
     * metadata
     * missing-glyph
     * mpath
-<font color="#DD6600">    * path - partial support</font>
+<font color="#DD6600">
+    * path - partial support
+</font>
     * pattern
-<font color="#DD6600">    * <font color="#DD6600">polygon - partial support
-    * <font color="#DD6600">polyline - partial support</font>
+<font color="#DD6600">
+    * <font color="#DD6600">polygon - partial support
+    * <font color="#DD6600">polyline - partial support
+</font>
     * radialGradient
-<font color="#DD6600">    * rect - partial support</font>
+<font color="#DD6600">
+    * rect - partial support
+</font>
     * script
     * set
-<font color="#DD6600">    * stop - partial support</font>
+<font color="#DD6600">
+    * stop - partial support
+</font>
     * style
-<font color="#DD6600">    * svg - partial support</font>
+<font color="#DD6600">
+    * svg - partial support
+</font>
     * switch
     * symbol
     * text
