@@ -1,9 +1,9 @@
-#summary Current Status
+#summary Current Status of SVG Support
 #labels Featured
 
 The following is a list of SVG element types and how well supported they are in svg2vml.  If no support is listed, assume that svg2vml doesn't yet support that element at all.
 <font color="#DD0000"><font color="#349a34">
-    * a - Native Support from browser (unless a specific case is provided)</font>
+    * a - Native Support from browser (If you believe this not to be the case, please provide a specific case)</font>
     * altGlyph
     * altGlyphDef
     * altGlyphItem
@@ -86,7 +86,7 @@ The following is a list of SVG element types and how well supported they are in 
     * vkern
 </font>
 
-The following is a list of the SVG 1.1 features.  This list will be updated with information when we have assertained that we fully support one or more of the items below.
+The following is a list of the SVG 1.1 features.  This list will be updated with information when we have ascertained that we fully support one or more of the items below.
 <font color="#DD0000">
     * {{{http://www.w3.org/TR/SVG11/feature#SVG}}}
     * {{{http://www.w3.org/TR/SVG11/feature#SVGDOM}}}
@@ -146,3 +146,4 @@ The following is a list of the SVG 1.1 features.  This list will be updated with
     * org.w3c.dom.svg.all
 </font>
 
+As support for different elements and features is added this list will be updated.
