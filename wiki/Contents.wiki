@@ -1,6 +1,6 @@
 #sidebar
 [http://code.google.com/p/svg2vml/ Home]
-  * [SampleCode Usage &amp; Sample Code]
+  * [SampleCode Usage & Sample Code]
      * [ExampleRoundedDiv HTML DIV with rounded corners]
      * [ExampleShapesWithGradients SVG shapes with gradients]
      * [ExampleLineElement SVG lines and box]
