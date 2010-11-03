@@ -1,4 +1,5 @@
-[Home]
+#sidebar
+[http://code.google.com/p/svg2vml/ Home]
   * [SampleCode Usage &amp; Sample Code]
      * [ExampleRoundedDiv HTML DIV with rounded corners]
      * [ExampleShapesWithGradients SVG shapes with gradients]

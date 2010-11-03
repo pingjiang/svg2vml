@@ -1,7 +1,7 @@
 #summary The SVG2VML Project Roadmap
 #labels Featured
 
-The current release version is 1.1.1 which is available from the downloads page. 
+The current release version is 1.1.1 which is available from the [http://code.google.com/p/svg2vml/downloads/list downloads] page. 
 
 == 1.1: Complete basic functionality ==
   * Make gradient uniform for SVG and VML
